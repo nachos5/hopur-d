@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="mainAnchor" prefHeight="0.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.MenuBarController">
+    <children>
+        <MenuBar layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <menus>
+                <Menu fx:id="fileItem" mnemonicParsing="false" text="Skrá">
+                    <items>
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#temp" text="Opna skrá" />
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#temp" text="Vista skrá" />
+                        <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitProgram" text="Hætta" />
+                    </items>
+                </Menu>
+                <Menu fx:id="settingsItem" mnemonicParsing="false" text="Stillingar">
+                    <items>
+                        <Menu fx:id="languageItem" mnemonicParsing="false" text="Tungumál">
+                            <items>
+                                <MenuItem fx:id="icelandic" mnemonicParsing="false" onAction="#temp" text="Íslenska" />
+                                <MenuItem fx:id="english" mnemonicParsing="false" onAction="#temp" text="English" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </children>
+</AnchorPane>
