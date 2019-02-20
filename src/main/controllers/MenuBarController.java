@@ -7,13 +7,15 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
+import main.controllers.LoginDialog;
+
 public class MenuBarController {
     @FXML
     public AnchorPane mainAnchor;
     @FXML
     public Menu fileItem;
     @FXML
-    public MenuItem openItem;
+    public MenuItem loginItem;
     @FXML
     public MenuItem saveItem;
     @FXML
@@ -35,5 +37,10 @@ public class MenuBarController {
     @FXML
     private void temp(ActionEvent event) {
         System.out.println("Test item");
+    }
+
+    @FXML
+    private void login(ActionEvent event) {
+        LoginDialog l = new LoginDialog();
     }
 }

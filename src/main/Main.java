@@ -53,6 +53,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, 500, 300);
 
         // Set the scene to the stage
+        stage.setTitle("Main Menu");
         stage.setScene(scene);
 
         // Stage sizes

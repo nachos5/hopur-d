@@ -9,7 +9,7 @@
             <menus>
                 <Menu fx:id="fileItem" mnemonicParsing="false" text="Skrá">
                     <items>
-                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#temp" text="Opna skrá" />
+                        <MenuItem fx:id="loginItem" mnemonicParsing="false" onAction="#login" text="Login" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#temp" text="Vista skrá" />
                         <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitProgram" text="Hætta" />
                     </items>
