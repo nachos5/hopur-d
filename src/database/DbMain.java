@@ -3,6 +3,7 @@ package database;
 import database.models.Trip;
 import database.models.User;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +12,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.net.URI;
 
 public class DbMain {
 
@@ -30,7 +30,7 @@ public class DbMain {
   /**
    * development (local database)
    */
-  public static void local() {
+  private static void local() {
     db_url = System.getenv("DATABASE_URL");
     db_user = System.getenv("DATABASE_USER");
     db_password = System.getenv("DATABASE_PASSWORD");
@@ -39,7 +39,7 @@ public class DbMain {
   /**
    * production (heroku database)
    */
-  public static void production() {
+  private static void production() {
     try {
       String uri = "postgres://rsugtizrdafzct:984365342b0ea220bac9a7828d0ef1caa37724daff2c891f59a9aa16758e74e4@ec2-54-75-245-94.eu-west-1.compute.amazonaws.com:5432/d9pu9h02ajef6r";
       URI db_uri = new URI(uri);
@@ -75,11 +75,12 @@ public class DbMain {
    * @param sql sql strengurinn
    */
    public static void executeStatement(String sql) {
-    try (Statement stmt = conn.createStatement()) {
-      stmt.execute(sql);
-    } catch(SQLException e) {
-      System.out.println(e.getMessage());
-    }
+     // System.out.println(sql);
+     try (Statement stmt = conn.createStatement()) {
+       stmt.execute(sql);
+     } catch(SQLException e) {
+       System.out.println(e.getMessage());
+     }
   }
 
 
@@ -93,7 +94,7 @@ public class DbMain {
    * @param trip ferð
    */
   public static void insertTrip(Trip trip) {
-    String sql = "INSERT INTO trips(name,price) VALUES(?,?);";
+    String sql = "INSERT INTO trip(name,price) VALUES(?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
@@ -112,7 +113,7 @@ public class DbMain {
    */
   public static ArrayList<Trip> getAllTrips() {
     ArrayList<Trip> trips = new ArrayList<>();
-    String sql = "SELECT * FROM trips;";
+    String sql = "SELECT * FROM trip;";
 
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {

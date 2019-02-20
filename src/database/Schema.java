@@ -25,19 +25,19 @@ public class Schema {
   // bara eitthvað til að testa, ath þarf að breyta módelum
   // og queryum líka ef breytingar eru gerðar hérna
   private static void createTables() {
-    String trips = "CREATE TABLE trips(" +
-        "id serial primary key," +
-        "name varchar(32)," +
-        "price int" +
+    String users = "CREATE TABLE users(" + // user er reserved orð
+        "id SERIAL PRIMARY KEY," +
+        "name VARCHAR(32)," +
+        "email VARCHAR(32) UNIQUE" +
         ");";
-    String users = "CREATE TABLE users(" +
-        "id serial primary key," +
-        "name varchar(32)," +
-        "email varchar(32) unique" +
+    String trip = "CREATE TABLE trip(" +
+        "id SERIAL PRIMARY KEY," +
+        "name VARCHAR(32)," +
+        "price INT" +
         ");";
 
     // setjum alla strengina saman og keyrum svo statementið
-    String sql = trips + users;
+    String sql = trip + users;
     DbMain.executeStatement(sql);
   }
 
@@ -52,9 +52,9 @@ public class Schema {
 
     // setjum allar ferðirnar í database-ið
     for (Trip t: trips) {
-      delay(100);
-      insertTrip(t);
       delay(100); // bíðum smá á milli requesta
+      insertTrip(t);
+      delay(100);
     }
   }
 
