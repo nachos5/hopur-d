@@ -3,6 +3,7 @@ package database;
 import database.models.Trip;
 import database.models.User;
 
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,18 +11,45 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.net.URI;
 
 public class DbMain {
 
-  private static final String db_url = System.getenv("DATABASE_URL");
-  private static final String db_user = System.getenv("DATABASE_USER");
-  private static final String db_password = System.getenv("DATABASE_PASSWORD");
+  private static String db_url;
+  private static String db_user;
+  private static String db_password;
   private static Connection conn = null;
 
   public static void init() {
+    local(); // production() hér ef heroku database
     connect();
     Schema.run(); // commenta út ef það á ekki að droppa núverandi schema!
     close();
+  }
+
+  /**
+   * development (local database)
+   */
+  public static void local() {
+    db_url = System.getenv("DATABASE_URL");
+    db_user = System.getenv("DATABASE_USER");
+    db_password = System.getenv("DATABASE_PASSWORD");
+  }
+
+  /**
+   * production (heroku database)
+   */
+  public static void production() {
+    try {
+      String uri = "postgres://rsugtizrdafzct:984365342b0ea220bac9a7828d0ef1caa37724daff2c891f59a9aa16758e74e4@ec2-54-75-245-94.eu-west-1.compute.amazonaws.com:5432/d9pu9h02ajef6r";
+      URI db_uri = new URI(uri);
+
+      db_url = "jdbc:postgresql://" + db_uri.getHost() + ':' + db_uri.getPort() + db_uri.getPath();
+      db_user = db_uri.getUserInfo().split(":")[0];
+      db_password = db_uri.getUserInfo().split(":")[1];
+    } catch (URISyntaxException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public static void connect() {

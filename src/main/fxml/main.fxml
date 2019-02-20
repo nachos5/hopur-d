@@ -2,30 +2,38 @@
 
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.Main">
    <children>
-      <TableView fx:id="trip_table" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+      <TableView fx:id="trip_table" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columns>
           <TableColumn fx:id="trip_table_name" prefWidth="75.0" text="Nafn" />
           <TableColumn fx:id="trip_table_price" prefWidth="75.0" text="Verð" />
         </columns>
       </TableView>
-      <TableView fx:id="user_table" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="user_table" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <columns>
           <TableColumn fx:id="user_table_name" prefWidth="75.0" text="Nafn" />
           <TableColumn fx:id="user_table_email" prefWidth="75.0" text="Netfang" />
         </columns>
       </TableView>
+      <TextField fx:id="trip_table_search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="user_table_search" GridPane.columnIndex="2" GridPane.rowIndex="1" />
    </children>
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
       <RowConstraints />
    </rowConstraints>
 </GridPane>
