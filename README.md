@@ -5,3 +5,6 @@ Getið sett inn env variables í main fallið með því að fara í fellilistan
 Svo stilla DB_URL, DB_USER og DB_PASSWORD, hjá mér er t.d. DB_URL="jdbc:postgresql://localhost/hopurd"
 
 JDBC getur ekki tekið við venjulegum postgres url sem inniheldur username og password heldur þarf að skipta þessu svona upp.
+
+Þurfið líklegast líka að adda lib möppunni manually í libraries, er gert í file ->
+project structure -> libraries -> plúsinn og svo velja lib möppuna
