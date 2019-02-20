@@ -31,9 +31,9 @@ public class DbMain {
    * development (local database)
    */
   private static void local() {
-    db_url = System.getenv("DATABASE_URL");
-    db_user = System.getenv("DATABASE_USER");
-    db_password = System.getenv("DATABASE_PASSWORD");
+    db_url = System.getenv("DATABASE_URL_HOPURD");
+    db_user = System.getenv("DATABASE_USER_HOPURD");
+    db_password = System.getenv("DATABASE_PASSWORD_HOPURD");
   }
 
   /**

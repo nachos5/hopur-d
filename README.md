@@ -4,4 +4,5 @@ Held að það sé best að við notum local database á meðan við búum til f
 Fer eftir stýrikerfi en hjá mér í Ubuntu setti ég env variables með þvi að breyta þessum file /etc/environment og gerði
 DATABASE_URL="jdbc:postgresql://localhost/hopurd" etc... og já restarta tölvunni
 
-Þurfið að stilla DATABASE_URL, DATABASE_USER og DATABASE_PASSWORD
+Þurfið að stilla DATABASE_URL_HOPURD, DATABASE_USER_HOPURD og DATABASE_PASSWORD_HOPURD
+lét breyturnar enda á hopurd af því að þetta var að conflicta við vefforritun
