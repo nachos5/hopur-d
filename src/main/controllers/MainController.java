@@ -17,7 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Main implements Initializable {
+public class MainController implements Initializable {
 
   @FXML
   public TableView<Trip> trip_table;
