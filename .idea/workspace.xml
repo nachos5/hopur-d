@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d41fb7fc-54dd-404e-b64e-c9db23d73d10" name="Default Changelist" comment="">
+    <list default="true" id="66c181c6-99ec-4b01-8ce3-cd637c8de0a6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/META-INF/hopurd.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/database/DbMain.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/database/Schema.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/database/models/Trip.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/database/models/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/Utils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/controllers/LoginDialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/controllers/MainController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/controllers/MenuBarController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/controllers/login.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/fxml/Main.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/hopurd/main/fxml/MenuBar.fxml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,11 +35,20 @@
         <entry file="file://$PROJECT_DIR$/src/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="329">
-              <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
+              <caret line="24" column="40" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#978#979#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="22" selection-start-line="4" selection-end-line="4" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -124,12 +150,6 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="960" />
-    <option name="y" value="25" />
-    <option name="width" value="960" />
-    <option name="height" value="990" />
-  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -166,22 +186,12 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
     </panes>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550674837498" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -279,12 +289,6 @@
       <window_info anchor="right" id="Theme Preview" order="10" />
     </layout>
   </component>
-  <component name="VcsManagerConfiguration">
-    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
-    <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
-    <MESSAGE value="WIP - sma cleanup á controller'um og fxml, á eftir að fínpússa slatta" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP - sma cleanup á controller'um og fxml, á eftir að fínpússa slatta" />
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/controllers/LoginDialog.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -322,17 +326,24 @@
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="22" selection-start-line="4" selection-end-line="4" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="206" column="33" lean-forward="true" selection-start-line="206" selection-start-column="33" selection-end-line="206" selection-end-column="33" />
+        <state relative-caret-position="2775">
+          <caret line="185" column="33" selection-start-line="185" selection-start-column="33" selection-end-line="185" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="329">
-          <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
+          <caret line="24" column="40" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#978#979#0" expanded="true" />
