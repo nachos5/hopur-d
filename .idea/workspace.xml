@@ -133,6 +133,12 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="960" />
+    <option name="y" value="25" />
+    <option name="width" value="960" />
+    <option name="height" value="990" />
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -196,9 +202,9 @@
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
-        <env name="DB_URL" value="jdbc:postgresql://localhost/hugbo" />
-        <env name="DB_USER" value="sheep" />
-        <env name="DB_PASSWORD" value="datasheep" />
+        <env name="DB_URL" value="jdbc:postgresql://localhost/hopurd" />
+        <env name="DB_USER" value="saleor" />
+        <env name="DB_PASSWORD" value="saleor" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="hopurd" />
