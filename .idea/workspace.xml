@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d41fb7fc-54dd-404e-b64e-c9db23d73d10" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -14,15 +15,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="329">
               <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#978#979#0" expanded="true" />
+                <element signature="e#633#634#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="483">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
@@ -30,12 +40,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/controllers/LoginDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
+            <state relative-caret-position="460">
               <caret line="30" selection-start-line="30" selection-end-line="30" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#481#482#0" expanded="true" />
-                <element signature="e#509#510#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -44,7 +52,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/fxml/Main.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
+            <state relative-caret-position="207">
               <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
             </state>
           </provider>
@@ -54,7 +62,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/fxml/MenuBar.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
+            <state relative-caret-position="253">
               <caret line="11" column="46" selection-start-line="11" selection-start-column="46" selection-end-line="11" selection-end-column="46" />
             </state>
           </provider>
@@ -64,14 +72,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/controllers/MenuBarController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="447">
+            <state relative-caret-position="713">
               <caret line="43" column="42" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#606#607#0" expanded="true" />
-                <element signature="e#637#638#0" expanded="true" />
-                <element signature="e#771#772#0" expanded="true" />
-                <element signature="e#802#803#0" expanded="true" />
                 <element signature="e#911#912#0" expanded="true" />
                 <element signature="e#960#961#0" expanded="true" />
               </folding>
@@ -82,7 +86,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/controllers/MainController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
+            <state relative-caret-position="1656">
               <caret line="87" column="70" selection-start-line="87" selection-start-column="70" selection-end-line="87" selection-end-column="70" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -94,7 +98,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/database/models/Trip.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
+            <state relative-caret-position="115">
               <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
             </state>
           </provider>
@@ -103,7 +107,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/database/models/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
+            <state relative-caret-position="322">
               <caret line="15" column="16" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
             </state>
           </provider>
@@ -112,7 +116,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/Utils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
+            <state relative-caret-position="46">
               <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
@@ -145,43 +149,19 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="database" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hopur-d" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hopur-d" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
+              <item name="hopurd" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hopurd" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -203,11 +183,12 @@
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
         <env name="DB_URL" value="jdbc:postgresql://localhost/hopurd" />
-        <env name="DB_USER" value="saleor" />
+        <env name="DB_USER" value="s" />
         <env name="DB_PASSWORD" value="saleor" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="hopurd" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../hopur" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="main.*" />
@@ -246,10 +227,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="25" width="1920" height="990" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.20254566" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.20490928" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" />
       <window_info id="Designer" order="3" />
@@ -293,12 +273,10 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/controllers/LoginDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
+        <state relative-caret-position="460">
           <caret line="30" selection-start-line="30" selection-end-line="30" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#481#482#0" expanded="true" />
-            <element signature="e#509#510#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -326,7 +304,7 @@
           <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#978#979#0" expanded="true" />
+            <element signature="e#633#634#0" expanded="true" />
           </folding>
         </state>
       </provider>
