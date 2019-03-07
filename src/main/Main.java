@@ -9,9 +9,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import main.controllers.MenuBarController;
-import main.controllers.MainController;
+import main.utilities.Language;
+import main.utilities.UTF8Control;
 
 import java.io.IOException;
+import java.util.*;
 
 public class Main extends Application {
 
@@ -33,11 +35,9 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException{
-
-        /* Load FXML */
-
+        ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
         // MenuBar
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/MenuBar.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/MenuBar.fxml"), bundle);
         Parent menuBar = loader.load();
         // Load controller
         MenuBarController menuBarController = loader.getController();
@@ -53,7 +53,8 @@ public class Main extends Application {
         Scene scene = new Scene(root, 500, 300);
 
         // Set the scene to the stage
-        stage.setTitle("Main Menu");
+        //stage.setTitle("Main Menu");
+        stage.titleProperty().bind(Language.createStringBinding("Main.title"));
         stage.setScene(scene);
 
         // Stage sizes

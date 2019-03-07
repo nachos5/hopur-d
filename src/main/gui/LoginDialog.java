@@ -1,4 +1,4 @@
-package main.controllers;
+package main.gui;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -7,14 +7,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import main.utilities.Language;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public class LoginDialog extends Dialog {
 
     private Dialog<Pair<String, String>> login;
 
-    LoginDialog() {
+    public LoginDialog() {
         login = new Dialog<>();
 
         setup();
@@ -26,11 +28,11 @@ public class LoginDialog extends Dialog {
 
     private void setup() {
         // Titles
-        login.setTitle("Login");
-        login.setHeaderText("Please log in");
+        login.titleProperty().bind(Language.createStringBinding("LoginDialog.title"));
+        login.headerTextProperty().bind(Language.createStringBinding("LoginDialog.header"));
 
         // Image
-        login.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
+        login.setGraphic(new ImageView(this.getClass().getResource("/login.png").toString()));
 
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
