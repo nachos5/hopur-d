@@ -1,6 +1,6 @@
-package main;
+package main.utilities;
 
-public class Utils {
+public final class Utils {
 
   /**
    * fall til að stöðva keyrslu í x ms

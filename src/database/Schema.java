@@ -5,7 +5,7 @@ import database.models.User;
 
 import static database.DbMain.insertTrip;
 import static database.DbMain.insertUser;
-import static main.Utils.delay;
+import static main.utilities.Utils.delay;
 
 public class Schema {
 

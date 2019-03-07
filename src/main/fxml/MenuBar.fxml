@@ -7,19 +7,18 @@
     <children>
         <MenuBar layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
-                <Menu fx:id="fileItem" mnemonicParsing="false" text="Skrá">
+                <Menu fx:id="file" mnemonicParsing="false" text="%MenuBar.file">
                     <items>
-                        <MenuItem fx:id="loginItem" mnemonicParsing="false" onAction="#login" text="Login" />
-                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#temp" text="Vista skrá" />
-                        <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitProgram" text="Hætta" />
+                        <MenuItem fx:id="login" mnemonicParsing="false" onAction="#login" text="%MenuBar.login" />
+                        <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#quitProgram" text="%MenuBar.quit" />
                     </items>
                 </Menu>
-                <Menu fx:id="settingsItem" mnemonicParsing="false" text="Stillingar">
+                <Menu fx:id="settings" mnemonicParsing="false" text="%MenuBar.settings">
                     <items>
-                        <Menu fx:id="languageItem" mnemonicParsing="false" text="Tungumál">
+                        <Menu fx:id="language" mnemonicParsing="false" text="%MenuBar.language">
                             <items>
-                                <MenuItem fx:id="icelandic" mnemonicParsing="false" onAction="#temp" text="Íslenska" />
-                                <MenuItem fx:id="english" mnemonicParsing="false" onAction="#temp" text="English" />
+                                <MenuItem fx:id="is" mnemonicParsing="false" onAction="#setLanguage" text="%MenuBar.icelandic" />
+                                <MenuItem fx:id="en" mnemonicParsing="false" onAction="#setLanguage" text="%MenuBar.english" />
                             </items>
                         </Menu>
                     </items>
