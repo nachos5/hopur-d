@@ -183,27 +183,29 @@ public class DbMain {
   }
 
   /**
-   * ADDED
-   * XSS - þarf að laga!!
+   *
+   * @param username
    * @return
    */
-  public static User getUser(String u) {
-    String sql = "SELECT * FROM users WHERE username = '";
-    sql += u + "';";
-    User newU = new User("failure", "", "");
+  public static User getUser(String username) {
+    String sql = "SELECT * FROM users WHERE username = ?";
 
-    System.out.println("sql = " + sql);
-    try (Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
-          rs.next();
-          String username = rs.getString("username");
-          String password = rs.getString("password");
-          String email = rs.getString("email");
-          newU = new User(username, email, password);
+    try {
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, username);
+
+        ResultSet rs = preparedStmt.executeQuery();
+        rs.next();
+
+        return new User(
+                rs.getString("username"),
+                rs.getString("email"),
+                rs.getString("password")
+        );
     } catch (SQLException e) {
-      System.out.println("getUsers failed: " + e.getMessage());
+      System.err.println("getUsers failed: " + e.getMessage());
     }
-    return newU;
+    return null;
   }
 
 

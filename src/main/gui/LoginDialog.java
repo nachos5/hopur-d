@@ -3,12 +3,14 @@ package main.gui;
 import database.DbMain;
 import database.models.User;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import main.utilities.Account;
 import main.utilities.Language;
 import main.utilities.Utils;
 
@@ -90,11 +92,8 @@ public class LoginDialog extends Dialog {
             String password1 = usernamePassword.getValue();
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
 
-            Utils.login(username1, password1);
+            Account.login(username1, password1);
 
-            User n = Utils.getCurrentUser();
-
-            System.out.println("n = " + n.getName());
         });
     }
 
