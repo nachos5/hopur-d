@@ -1,6 +1,8 @@
 package main.gui;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -44,7 +46,7 @@ public class LoginDialog extends Dialog {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField username = new TextField();
+        TextField username = new TextField();;
         username.setPromptText("Username");
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
