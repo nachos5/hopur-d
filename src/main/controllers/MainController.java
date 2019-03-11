@@ -49,7 +49,7 @@ public class MainController implements Initializable {
     DbMain.connect();
     trip_table.setItems(trip_models());
     user_table.setItems(user_models());
-    DbMain.close();
+    //DbMain.close();
   }
 
   /**

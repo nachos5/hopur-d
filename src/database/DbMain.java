@@ -142,12 +142,13 @@ public class DbMain {
    * @param user notandi
    */
   public static void insertUser(User user) {
-    String sql = "INSERT INTO users(name,email) VALUES(?,?);";
+    String sql = "INSERT INTO users(username,email,password) VALUES(?,?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
       pstmt.setString(1, user.getName());
       pstmt.setString(2, user.getEmail());
+      pstmt.setString(3, user.getPassword());
       // framkvæmum statementið
       pstmt.executeUpdate();
       System.out.println("User added to database");
@@ -163,19 +164,46 @@ public class DbMain {
     ArrayList<User> users = new ArrayList<>();
     String sql = "SELECT * FROM users;";
 
+    //connect();
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
       while(rs.next()) {
-        String name = rs.getString("name");
+        String username = rs.getString("username");
+        String password = rs.getString("password");
         String email = rs.getString("email");
         // bætum við notandanum í listann
-        users.add(new User(name, email));
+        users.add(new User(username, email, password));
       }
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
 
+    //close();
     return users;
+  }
+
+  /**
+   * ADDED
+   * XSS - þarf að laga!!
+   * @return
+   */
+  public static User getUser(String u) {
+    String sql = "SELECT * FROM users WHERE username = '";
+    sql += u + "';";
+    User newU = new User("failure", "", "");
+
+    System.out.println("sql = " + sql);
+    try (Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+          rs.next();
+          String username = rs.getString("username");
+          String password = rs.getString("password");
+          String email = rs.getString("email");
+          newU = new User(username, email, password);
+    } catch (SQLException e) {
+      System.out.println("getUsers failed: " + e.getMessage());
+    }
+    return newU;
   }
 
 

@@ -1,5 +1,7 @@
 package main.gui;
 
+import database.DbMain;
+import database.models.User;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -8,8 +10,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import main.utilities.Language;
+import main.utilities.Utils;
 
-import java.util.Locale;
+import javax.rmi.CORBA.Util;
 import java.util.Optional;
 
 public class LoginDialog extends Dialog {
@@ -83,7 +86,15 @@ public class LoginDialog extends Dialog {
 
         // Trigger
         result.ifPresent(usernamePassword -> {
+            String username1 = usernamePassword.getKey();
+            String password1 = usernamePassword.getValue();
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+
+            Utils.login(username1, password1);
+
+            User n = Utils.getCurrentUser();
+
+            System.out.println("n = " + n.getName());
         });
     }
 

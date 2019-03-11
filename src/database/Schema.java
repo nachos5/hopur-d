@@ -2,6 +2,9 @@ package database;
 
 import database.models.Trip;
 import database.models.User;
+import main.utilities.Utils;
+
+import javax.rmi.CORBA.Util;
 
 import static database.DbMain.insertTrip;
 import static database.DbMain.insertUser;
@@ -27,8 +30,9 @@ public class Schema {
   private static void createTables() {
     String users = "CREATE TABLE users(" + // user er reserved orð
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(32)," +
-        "email VARCHAR(32) UNIQUE" +
+        "username VARCHAR(32)," +
+        "email VARCHAR(32) UNIQUE," +
+        "password VARCHAR(128)" +
         ");";
     String trip = "CREATE TABLE trip(" +
         "id SERIAL PRIMARY KEY," +
@@ -59,9 +63,10 @@ public class Schema {
   }
 
   private static void createInitialUsers() {
-    User user1 = new User("a", "a@a.is");
-    User user2 = new User("b", "b@b.is");
-    User user3 = new User("c", "c@c.is");
+    User user1 = new User("admin", "admin@gmail.com", Utils.hashPassword("admin"));
+    User user2 = new User("user", "user@gmail.com", Utils.hashPassword("siggi"));
+    User user3 = new User("admin", "admin2@gmail.com", Utils.hashPassword("admin2"));
+    User user4 = new User("Bubbi", "bubbi@gmail.com", Utils.hashPassword("bubbi"));
 
     User[] users = {
         user1, user2, user3
