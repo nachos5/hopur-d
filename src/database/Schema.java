@@ -12,11 +12,12 @@ import static main.utilities.Utils.delay;
 
 public class Schema {
 
-  public static void run() {
+  public static void run(String user) {
     // droppum public schemanu (og öllum töflum í leiðinni!)
-    DbMain.executeStatement("DROP SCHEMA public CASCADE;");
+    DbMain.executeStatement("DROP SCHEMA IF EXISTS daytrip CASCADE;");
     // búum til það uppá nýtt
-    DbMain.executeStatement("CREATE SCHEMA public;");
+    String createSchema = "CREATE SCHEMA daytrip AUTHORIZATION " + user + ";";
+    DbMain.executeStatement(createSchema);
     // býr til allar töflurnar
     createTables();
     // upphafs-ferðagögn
@@ -28,14 +29,14 @@ public class Schema {
   // bara eitthvað til að testa, ath þarf að breyta módelum
   // og queryum líka ef breytingar eru gerðar hérna
   private static void createTables() {
-    String users = "CREATE TABLE users(" + // user er reserved orð
+    String users = "CREATE TABLE daytrip.users(" + // user er reserved orð
         "id SERIAL PRIMARY KEY," +
         "username VARCHAR(32)," +
         "admin BOOLEAN," +
         "email VARCHAR(32) UNIQUE," +
         "password VARCHAR(128)" +
         ");";
-    String trip = "CREATE TABLE trip(" +
+    String trip = "CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +
         "name VARCHAR(32)," +
         "price INT" +

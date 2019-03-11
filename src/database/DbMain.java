@@ -23,7 +23,7 @@ public class DbMain {
   public static void init() {
     local(); // production() hér ef heroku database
     connect();
-    Schema.run(); // commenta út ef það á ekki að droppa núverandi schema!
+    Schema.run(db_user); // commenta út ef það á ekki að droppa núverandi schema!
     close();
   }
 
@@ -93,7 +93,7 @@ public class DbMain {
    * @param trip ferð
    */
   public static void insertTrip(Trip trip) {
-    String sql = "INSERT INTO trip(name,price) VALUES(?,?);";
+    String sql = "INSERT INTO daytrip.trip(name,price) VALUES(?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // Set parameters
@@ -112,7 +112,7 @@ public class DbMain {
    */
   public static ArrayList<Trip> getAllTrips() {
     ArrayList<Trip> trips = new ArrayList<>();
-    String sql = "SELECT * FROM trip;";
+    String sql = "SELECT * FROM daytrip.trip;";
 
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
@@ -142,7 +142,7 @@ public class DbMain {
    * @param user notandi
    */
   public static void insertUser(User user) {
-    String sql = "INSERT INTO users(username,admin,email,password) VALUES(?,?,?,?);";
+    String sql = "INSERT INTO daytrip.users(username,admin,email,password) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
@@ -163,7 +163,7 @@ public class DbMain {
    */
   public static ArrayList<User> getAllUsers() {
     ArrayList<User> users = new ArrayList<>();
-    String sql = "SELECT * FROM users;";
+    String sql = "SELECT * FROM daytrip.users;";
 
     //connect();
     try (Statement stmt = conn.createStatement();
@@ -177,7 +177,7 @@ public class DbMain {
         users.add(new User(username, admin, email, password));
       }
     } catch (SQLException e) {
-      System.err.println(e.getMessage());
+      System.err.println("getAllUsers() failed: " + e.getMessage());
     }
 
     //close();
@@ -190,7 +190,7 @@ public class DbMain {
    * @return
    */
   public static User getUser(String username) {
-    String sql = "SELECT * FROM users WHERE username = ?";
+    String sql = "SELECT * FROM daytrip.users WHERE username = ?";
 
     try {
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -206,7 +206,7 @@ public class DbMain {
                 rs.getString("password")
         );
     } catch (SQLException e) {
-      System.err.println("getUsers failed: " + e.getMessage());
+      System.err.println("getUsers() failed: " + e.getMessage());
     }
     return null;
   }
