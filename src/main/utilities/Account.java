@@ -9,7 +9,7 @@ public class Account {
 
     private static User currentUser;
     private static SimpleStringProperty currentUsername;
-    private static final User noUser  = new User("NoUser", "NoUser@gmail.com","NoUserPassword");
+    private static final User noUser  = new User("NoUser", false, "NoUser@gmail.com","NoUserPassword");
 
     static {
         currentUser = noUser;
@@ -34,7 +34,7 @@ public class Account {
         }
         else if (Utils.checkPassword(password, user.getPassword())) {
             currentUser = user;
-            currentUsername.set(user.getName());
+            currentUsername.set(user.getUsername());
         }
     }
 

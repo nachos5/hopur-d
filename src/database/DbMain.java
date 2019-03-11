@@ -57,7 +57,7 @@ public class DbMain {
       conn = DriverManager.getConnection(db_url, db_user, db_password);
       System.out.println("Connected to the PostgreSQL server successfully.");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("connect() failed: " + e.getMessage());
     }
   }
 
@@ -65,7 +65,7 @@ public class DbMain {
     try {
       conn.close();
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("close() failed: " + e.getMessage());
     }
   }
 
@@ -75,11 +75,10 @@ public class DbMain {
    * @param sql sql strengurinn
    */
    public static void executeStatement(String sql) {
-     // System.out.println(sql);
      try (Statement stmt = conn.createStatement()) {
        stmt.execute(sql);
      } catch(SQLException e) {
-       System.out.println(e.getMessage());
+       System.err.println("executeStatement() failed: " + e.getMessage());
      }
   }
 
@@ -97,14 +96,14 @@ public class DbMain {
     String sql = "INSERT INTO trip(name,price) VALUES(?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      // stillum parametra
+      // Set parameters
       pstmt.setString(1, trip.getName());
       pstmt.setInt(2, trip.getPrice());
-      // framkvæmum statementið
+
       pstmt.executeUpdate();
       System.out.println("Trip added to database");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("insertTrip() failed: " + e.getMessage());
     }
   }
 
@@ -117,14 +116,15 @@ public class DbMain {
 
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
+
       while(rs.next()) {
         String name = rs.getString("name");
         int price = rs.getInt("price");
-        // bætum við ferðinni í listann
+        // Add trips to arraylist
         trips.add(new Trip(name, price));
       }
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("getAllTrips() failed: " + e.getMessage());
     }
 
     return trips;
@@ -142,18 +142,19 @@ public class DbMain {
    * @param user notandi
    */
   public static void insertUser(User user) {
-    String sql = "INSERT INTO users(username,email,password) VALUES(?,?,?);";
+    String sql = "INSERT INTO users(username,admin,email,password) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
-      pstmt.setString(1, user.getName());
-      pstmt.setString(2, user.getEmail());
-      pstmt.setString(3, user.getPassword());
+      pstmt.setString(1, user.getUsername());
+      pstmt.setBoolean(2, user.isAdmin());
+      pstmt.setString(3, user.getEmail());
+      pstmt.setString(4, user.getPassword());
       // framkvæmum statementið
       pstmt.executeUpdate();
       System.out.println("User added to database");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("insertUser() failed:" + e.getMessage());
     }
   }
 
@@ -169,13 +170,14 @@ public class DbMain {
          ResultSet rs = stmt.executeQuery(sql)) {
       while(rs.next()) {
         String username = rs.getString("username");
-        String password = rs.getString("password");
+        Boolean admin = rs.getBoolean("admin");
         String email = rs.getString("email");
+        String password = rs.getString("password");
         // bætum við notandanum í listann
-        users.add(new User(username, email, password));
+        users.add(new User(username, admin, email, password));
       }
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
 
     //close();
@@ -191,14 +193,15 @@ public class DbMain {
     String sql = "SELECT * FROM users WHERE username = ?";
 
     try {
-        PreparedStatement preparedStmt = conn.prepareStatement(sql);
-        preparedStmt.setString(1, username);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, username);
 
-        ResultSet rs = preparedStmt.executeQuery();
+        ResultSet rs = pstmt.executeQuery();
         rs.next();
 
         return new User(
                 rs.getString("username"),
+                rs.getBoolean("admin"),
                 rs.getString("email"),
                 rs.getString("password")
         );

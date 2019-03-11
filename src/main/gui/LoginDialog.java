@@ -1,9 +1,6 @@
 package main.gui;
 
-import database.DbMain;
-import database.models.User;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -12,9 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import main.utilities.Account;
 import main.utilities.Language;
-import main.utilities.Utils;
 
-import javax.rmi.CORBA.Util;
 import java.util.Optional;
 
 public class LoginDialog extends Dialog {

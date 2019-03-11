@@ -31,6 +31,7 @@ public class Schema {
     String users = "CREATE TABLE users(" + // user er reserved orð
         "id SERIAL PRIMARY KEY," +
         "username VARCHAR(32)," +
+        "admin BOOLEAN," +
         "email VARCHAR(32) UNIQUE," +
         "password VARCHAR(128)" +
         ");";
@@ -40,6 +41,7 @@ public class Schema {
         "price INT" +
         ");";
 
+    System.out.println(users);
     // setjum alla strengina saman og keyrum svo statementið
     String sql = trip + users;
     DbMain.executeStatement(sql);
@@ -63,10 +65,9 @@ public class Schema {
   }
 
   private static void createInitialUsers() {
-    User user1 = new User("admin", "admin@gmail.com", Utils.hashPassword("admin"));
-    User user2 = new User("user", "user@gmail.com", Utils.hashPassword("siggi"));
-    User user3 = new User("admin", "admin2@gmail.com", Utils.hashPassword("admin2"));
-    User user4 = new User("Bubbi", "bubbi@gmail.com", Utils.hashPassword("bubbi"));
+    User user1 = new User("admin", true, "admin@gmail.com", Utils.hashPassword("admin"));
+    User user2 = new User("user", false,"user@gmail.com", Utils.hashPassword("siggi"));
+    User user3 = new User("Bubbi", false, "bubbi@gmail.com", Utils.hashPassword("bubbi"));
 
     User[] users = {
         user1, user2, user3

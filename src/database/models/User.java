@@ -5,17 +5,30 @@ package database.models;
  */
 public class User {
   private String username;
+  private Boolean admin;
   private String password;
   private String email;
 
-  public User(String n, String e, String p) {
-    username = n;
-    email = e;
-    password = p;
+  /**
+   *
+   * @param us - usename
+   * @param ad - admin
+   * @param em - email
+   * @param pw - password (hashed)
+   */
+  public User(String us, Boolean ad, String em, String pw) {
+    username = us;
+    admin = ad;
+    email = em;
+    password = pw;
   }
 
-  public String getName() {
+  public String getUsername() {
     return username;
+  }
+
+  public Boolean isAdmin() {
+    return admin;
   }
 
   public String getEmail() {

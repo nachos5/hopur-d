@@ -97,7 +97,7 @@ public class MainController implements Initializable {
       }
       else {
         filtered_users.setPredicate(s ->
-            s.getName().toLowerCase().contains(filter) || // nafnið
+            s.getUsername().toLowerCase().contains(filter) || // nafnið
             s.getEmail().contains(filter) // verðið
         );
       }
