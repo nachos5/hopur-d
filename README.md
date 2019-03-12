@@ -1,8 +1,19 @@
 ## Git
-Ég (Guðmundur) er til í að sjá um git merge-in. Nokkrir punktar til að auðvelda ferlið:
-- Þegar master branchið er uppfært, muna þá að uppfæra ykkar branch út frá því, auðveldar conflict solving mjög mikið.
-  Semsagt `git checkout master > git pull origin master > git checkout mitt_branch > git merge master`
-- Pusha bara á ykkar branch. Ég skal sjá um að merge-a öll branchin saman á masterið.
+- Uppfæra 'my_branch'
+    - `git checkout master`
+        - Skipta yfir á local master branch
+    - `git pull origin master`
+        - Uppfæra local master branch með remote master
+    - `git checkout 'my_branch'`
+        - Skipta yfir á 'my_branch'
+    - `git merge master`
+        - Merge 'my_branc' við master
+    - `git push origin my_branch` 
+        - Uppfæra remote 'my_branch' með local 'my_branch'        
+
+### Merge
+- Guðmundur sér um að merge'a við masterinn (origin master)
+- Til að auðvelda það, þá er gott að uppfæra sitt branch reglulega, eða áður en það er push'að á sitt eigið branch.
 
 ## Folders
 
