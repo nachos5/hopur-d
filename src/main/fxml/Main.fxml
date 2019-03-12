@@ -17,7 +17,7 @@
       </TableView>
       <TableView fx:id="user_table" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <columns>
-          <TableColumn fx:id="user_table_name" prefWidth="75.0" text="Nafn" />
+          <TableColumn fx:id="user_table_username" prefWidth="75.0" text="Notendanafn" />
           <TableColumn fx:id="user_table_email" prefWidth="75.0" text="Netfang" />
         </columns>
       </TableView>

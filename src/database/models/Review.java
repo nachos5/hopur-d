@@ -2,17 +2,17 @@ package database.models;
 
 public class Review {
 
-  private String userEmail;
+  private int userId;
   private int tripId;
   private String text;
 
-  public Review(String email, int id, String t) {
-    userEmail = email;
-    tripId = id;
+  public Review(int uId, int tId, String t) {
+    userId = uId;
+    tripId = tId;
     text = t;
   }
-  public String getUserEmail() {
-    return userEmail;
+  public int getUserId() {
+    return userId;
   }
 
   public int getTripId() {

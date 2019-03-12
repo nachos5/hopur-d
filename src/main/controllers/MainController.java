@@ -32,7 +32,7 @@ public class MainController implements Initializable {
   @FXML
   public TableView<User> user_table;
   @FXML
-  public TableColumn<User, String> user_table_name;
+  public TableColumn<User, String> user_table_username;
   @FXML
   public TableColumn<User, String> user_table_email;
   @FXML
@@ -43,7 +43,7 @@ public class MainController implements Initializable {
     trip_table_name.setCellValueFactory(new PropertyValueFactory<>("name"));
     trip_table_price.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-    user_table_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+    user_table_username.setCellValueFactory(new PropertyValueFactory<>("username"));
     user_table_email.setCellValueFactory(new PropertyValueFactory<>("email"));
 
     // fyllum töflurnar af gögnum úr databaseinu
@@ -57,7 +57,7 @@ public class MainController implements Initializable {
       System.out.println("Nafn: " + trip.getName() + ", verð: " + trip.getPrice());
       System.out.println("Reviews:");
       for (Review review: trip.getReviews()) {
-        System.out.println("Notandi: " + review.getUserEmail() + ", texti: " + review.getText());
+        System.out.println("Notandi: " + review.getUserId() + ", texti: " + review.getText());
       }
       System.out.println();
     }
@@ -82,8 +82,8 @@ public class MainController implements Initializable {
       }
       else {
         filtered_users.setPredicate(s ->
-            s.getName().toLowerCase().contains(filter) || // nafnið
-            s.getEmail().contains(filter) // verðið
+            s.getUsername().toLowerCase().contains(filter) ||
+                s.getEmail().contains(filter)
         );
       }
     });
@@ -109,8 +109,8 @@ public class MainController implements Initializable {
       }
       else {
         filtered_trips.setPredicate(s ->
-            s.getName().toLowerCase().contains(filter) || // nafnið
-            Integer.toString(s.getPrice()).contains(filter) // verðið
+            s.getName().toLowerCase().contains(filter) ||
+                Integer.toString(s.getPrice()).contains(filter)
         );
       }
     });

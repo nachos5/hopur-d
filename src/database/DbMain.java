@@ -34,7 +34,8 @@ public class DbMain {
   private static void dev() {
     connect();
     Schema.run(db_user); // commenta út ef það á ekki að droppa núverandi schema!
-    close();
+    Insert.run();
+    //close();
   }
 
   /**
@@ -65,6 +66,7 @@ public class DbMain {
   public static void connect() {
     try {
       conn = DriverManager.getConnection(db_url, db_user, db_password);
+      System.out.println("Connected to the PostgreSQL server successfully.");
     } catch (SQLException e) {
       System.err.println("connect() failed: " + e.getMessage());
     }
@@ -83,13 +85,12 @@ public class DbMain {
    *
    * @param sql sql strengurinn
    */
-   public static void executeStatement(String sql) {
-     try (Statement stmt = conn.createStatement()) {
-       stmt.execute(sql);
-     } catch(SQLException e) {
-       System.err.println("executeStatement() failed: " + e.getMessage());
-     }
-     close();
+  public static void executeStatement(String sql) {
+    try (Statement stmt = conn.createStatement()) {
+      stmt.execute(sql);
+    } catch(SQLException e) {
+      System.err.println("executeStatement() failed: " + e.getMessage());
+    }
   }
 
   // **************************************************** //
@@ -111,7 +112,7 @@ public class DbMain {
     } catch (SQLException e) {
       System.err.println("insertUser() failed:" + e.getMessage());
     }
-    close();
+    //close();
   }
 
   /**
@@ -188,14 +189,14 @@ public class DbMain {
     } catch (SQLException e) {
       System.err.println("insertTrip() failed: " + e.getMessage());
     }
-    close();
+    //close();
   }
 
   /**
    * @return array listi með öllum ferðum úr databaseinu
    */
   public static ArrayList<Trip> getAllTrips() {
-    connect();
+    //connect();
     ArrayList<Trip> trips = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.trip;";
 
@@ -215,7 +216,7 @@ public class DbMain {
       System.err.println("getAllTrips() failed: " + e.getMessage());
     }
 
-    close();
+    //close();
     return trips;
   }
 
@@ -229,12 +230,12 @@ public class DbMain {
    * @param review ...
    */
   public static void insertReview(Review review ) {
-    connect();
-    String sql = "INSERT INTO review(userEmail,tripId,text) VALUES(?,?,?);";
+    //connect();
+    String sql = "INSERT INTO daytrip.review(userId,tripId,text) VALUES(?,?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
-      pstmt.setString(1, review.getUserEmail());
+      pstmt.setInt(1, review.getUserId());
       pstmt.setInt(2, review.getTripId());
       pstmt.setString(3, review.getText());
       // framkvæmum statementið
@@ -243,33 +244,33 @@ public class DbMain {
     } catch (SQLException e) {
       System.err.println("insertReview() failed:" + e.getMessage());
     }
-    close();
+    //close();
   }
 
 
   /**
-   * @param id referencar trip
+   * @param tripId referencar trip
    * @return array listi með öllum reviews úr databaseinu með tilteknu trip id-i
    */
-  public static ArrayList<Review> getReviewsForTrip(int id) {
-    connect();
+  public static ArrayList<Review> getReviewsForTrip(int tripId) {
+    //connect();
     ArrayList<Review> reviews = new ArrayList<>();
-    String sql = "SELECT * FROM review where tripId=?;";
+    String sql = "SELECT * FROM daytrip.review where tripId=?;";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      pstmt.setInt(1, id);
+      pstmt.setInt(1, tripId);
       ResultSet rs = pstmt.executeQuery();
       while(rs.next()) {
-        String userEmail = rs.getString("userEmail");
+        int userId = rs.getInt("userId");
         String text = rs.getString("text");
         // bætum við ferðinni í listann
-        reviews.add(new Review(userEmail, id, text));
+        reviews.add(new Review(userId, tripId, text));
       }
     } catch (SQLException e) {
       System.err.println(e.getMessage());
     }
 
-    close();
+    //close();
     return reviews;
   }
 

@@ -3,9 +3,10 @@ package database.dev;
 import database.models.Trip;
 import database.models.User;
 import database.models.Review;
+import main.utilities.Utils;
 
 import static database.DbMain.*;
-import static main.Utils.delay;
+import static main.utilities.Utils.*;
 
 public class Insert {
   public static void run() {
@@ -15,6 +16,22 @@ public class Insert {
     createInitialTrips();
     // upphafs-dómar
     createInitialReviews();
+  }
+
+  private static void createInitialUsers() {
+    User user1 = new User("admin", true, "admin@gmail.com", Utils.hashPassword("admin"));
+    User user2 = new User("user", false,"user@gmail.com", Utils.hashPassword("siggi"));
+    User user3 = new User("Bubbi", false, "bubbi@gmail.com", Utils.hashPassword("bubbi"));
+
+    User[] users = {
+        user1, user2, user3
+    };
+
+    for (User user: users) {
+      delay(100);
+      insertUser(user);
+      delay(100);
+    }
   }
 
   private static void createInitialTrips() {
@@ -34,26 +51,10 @@ public class Insert {
     }
   }
 
-  private static void createInitialUsers() {
-    User user1 = new User("a", "a@a.is");
-    User user2 = new User("b", "b@b.is");
-    User user3 = new User("c", "c@c.is");
-
-    User[] users = {
-        user1, user2, user3
-    };
-
-    for (User user: users) {
-      delay(100);
-      insertUser(user);
-      delay(100);
-    }
-  }
-
   private static void createInitialReviews() {
-    Review review1 = new Review("a@a.is", 1, "Frábær ganga!");
-    Review review2 = new Review("b@b.is", 1, "Ömurleg ganga!");
-    Review review3 = new Review("c@c.is", 2, "Ætla að kæra ykkur fyrir ósættanlega framkomu!");
+    Review review1 = new Review(1, 1, "Frábær ganga!");
+    Review review2 = new Review(2, 1, "Ömurleg ganga!");
+    Review review3 = new Review(3, 2, "Ætla að kæra ykkur fyrir ósættanlega framkomu!");
 
     Review[] reviews = {
         review1, review2, review3

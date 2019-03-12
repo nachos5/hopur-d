@@ -1,3 +1,9 @@
+## Git
+Ég (Guðmundur) er til í að sjá um git merge-in. Nokkrir punktar til að auðvelda ferlið:
+- Þegar master branchið er uppfært, muna þá að uppfæra ykkar branch út frá því, auðveldar conflict solving mjög mikið.
+  Semsagt `git checkout master > git pull origin master > git checkout mitt_branch > git merge master`
+- Pusha bara á ykkar branch. Ég skal sjá um að merge-a öll branchin saman á masterið.
+
 ## Folders
 
 **resources:**

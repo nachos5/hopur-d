@@ -1,14 +1,15 @@
 package database.dev;
 
-import database.DbMain;
+import javax.rmi.CORBA.Util;
+
+import static database.DbMain.*;
 
 public class Schema {
 
-  public static void run() {
-    // droppum public schemanu (og öllum töflum í leiðinni!)
-    DbMain.executeStatement("DROP SCHEMA public CASCADE;");
-    // búum til það uppá nýtt
-    DbMain.executeStatement("CREATE SCHEMA public;");
+  public static void run(String user) {
+    executeStatement("DROP SCHEMA IF EXISTS daytrip CASCADE;");
+    String createSchema = "CREATE SCHEMA daytrip AUTHORIZATION " + user + ";";
+    executeStatement(createSchema);
     // býr til allar töflurnar
     createTables();
   }
@@ -16,26 +17,29 @@ public class Schema {
   // bara eitthvað til að testa, ath þarf að breyta módelum
   // og queryum líka ef breytingar eru gerðar hérna
   private static void createTables() {
-    String users = "CREATE TABLE users(" + // user er reserved orð
+    String users = "CREATE TABLE daytrip.users(" +
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(32)," +
-        "email VARCHAR(32) UNIQUE" +
+        "username VARCHAR(32)," +
+        "admin BOOLEAN," +
+        "email VARCHAR(32) UNIQUE," +
+        "password VARCHAR(128)" +
         ");";
-    String trip = "CREATE TABLE trip(" +
+    String trip = "CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +
         "name VARCHAR(32)," +
         "price INT" +
         ");";
-    String review = "CREATE TABLE review(" +
-        "userEmail VARCHAR(32)," +
+    String review = "CREATE TABLE daytrip.review(" +
+        "userId INT," +
         "tripId INT," +
         "text VARCHAR(999)," +
-        "FOREIGN KEY (userEmail) REFERENCES users(email)," +
-        "FOREIGN KEY (tripId) REFERENCES trip(id)" +
+        "FOREIGN KEY (userId) REFERENCES daytrip.users(id)," +
+        "FOREIGN KEY (tripId) REFERENCES daytrip.trip(id)" +
         ");";
 
     // setjum alla strengina saman og keyrum svo statementið
-    String sql = trip + users + review;
-    DbMain.executeStatement(sql);
+    String sql = users + trip + review;
+    executeStatement(sql);
   }
 }
+
