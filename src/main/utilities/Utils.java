@@ -1,5 +1,7 @@
 package main.utilities;
 
+import com.Berry.BCrypt;
+
 public final class Utils {
 
   /**
@@ -15,4 +17,12 @@ public final class Utils {
     }
   }
 
+  public static String hashPassword(String password) {
+    String salt = BCrypt.gensalt();
+    return BCrypt.hashpw(password, salt);
+  }
+
+  public static Boolean checkPassword(String password, String hash) {
+    return BCrypt.checkpw(password, hash);
+  }
 }

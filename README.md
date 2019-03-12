@@ -46,3 +46,11 @@ DB_PASSWORD="myPassword"
 
 - DbMain.java notar `System.getenv` til að ná í database upplýsingarnar.
 - Þurfið líklegast líka að add'a `lib` möppunni manually í libraries, er gert í `file > project structure > libraries > plúsinn` og svo velja lib möppuna
+
+#### Changes
+- schema nota núna nýtt schema `daytrip` sem er með `AUTHORIZATION` á `db_user` (postgres eða custom user)
+- Þar þá alltaf að skrifa schema fyrir framan töflu, `daytrip.trip` eða `SELECT * FROM daytrip.trip` í kóða
+
+* **Postgres**
+   * `\dn` - Listar upp schemas
+   * `\dt daytrip.*` - Listr upp relations í schema daytrip

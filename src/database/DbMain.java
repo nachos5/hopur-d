@@ -33,8 +33,7 @@ public class DbMain {
    */
   private static void dev() {
     connect();
-    Schema.run();
-    Insert.run();
+    Schema.run(db_user); // commenta út ef það á ekki að droppa núverandi schema!
     close();
   }
 
@@ -59,7 +58,7 @@ public class DbMain {
       db_user = db_uri.getUserInfo().split(":")[0];
       db_password = db_uri.getUserInfo().split(":")[1];
     } catch (URISyntaxException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
   }
 
@@ -67,7 +66,7 @@ public class DbMain {
     try {
       conn = DriverManager.getConnection(db_url, db_user, db_password);
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("connect() failed: " + e.getMessage());
     }
   }
 
@@ -75,7 +74,7 @@ public class DbMain {
     try {
       conn.close();
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("close() failed: " + e.getMessage());
     }
   }
 
@@ -85,12 +84,10 @@ public class DbMain {
    * @param sql sql strengurinn
    */
    public static void executeStatement(String sql) {
-     connect();
-     // System.out.println(sql);
      try (Statement stmt = conn.createStatement()) {
        stmt.execute(sql);
      } catch(SQLException e) {
-       System.out.println(e.getMessage());
+       System.err.println("executeStatement() failed: " + e.getMessage());
      }
      close();
   }
@@ -99,51 +96,75 @@ public class DbMain {
   // ******************** NOTENDUR ********************** //
   // **************************************************** //
 
-  /**
-   * setur inn user í databaseið með prepare-uðu statementi
-   *
-   * @param user notandi
-   */
   public static void insertUser(User user) {
-    connect();
-    String sql = "INSERT INTO users(name,email) VALUES(?,?);";
+    String sql = "INSERT INTO daytrip.users(username,admin,email,password) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
       // stillum parametra
-      pstmt.setString(1, user.getName());
-      pstmt.setString(2, user.getEmail());
+      pstmt.setString(1, user.getUsername());
+      pstmt.setBoolean(2, user.isAdmin());
+      pstmt.setString(3, user.getEmail());
+      pstmt.setString(4, user.getPassword());
       // framkvæmum statementið
       pstmt.executeUpdate();
-      System.out.println("User added to database");
+      System.out.println("Review added to database");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("insertUser() failed:" + e.getMessage());
     }
     close();
   }
 
   /**
-   * @return array listi með öllum userum úr databaseinu
-   */
-  public static ArrayList<User> getAllUsers() {
-    connect();
-    ArrayList<User> users = new ArrayList<>();
-    String sql = "SELECT * FROM users;";
+  *
+  * @param username
+  * @return
+  */
+  public static User getUser(String username) {
+    String sql = "SELECT * FROM daytrip.users WHERE username = ?";
 
+    try {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, username);
+
+        ResultSet rs = pstmt.executeQuery();
+        rs.next();
+
+        return new User(
+                rs.getString("username"),
+                rs.getBoolean("admin"),
+                rs.getString("email"),
+                rs.getString("password")
+        );
+    } catch (SQLException e) {
+      System.err.println("getUsers() failed: " + e.getMessage());
+    }
+    return null;
+  }
+
+
+  public static ArrayList<User> getAllUsers() {
+    ArrayList<User> users = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.users;";
+
+    //connect();
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
       while(rs.next()) {
-        String name = rs.getString("name");
+        String username = rs.getString("username");
+        Boolean admin = rs.getBoolean("admin");
         String email = rs.getString("email");
+        String password = rs.getString("password");
         // bætum við notandanum í listann
-        users.add(new User(name, email));
+        users.add(new User(username, admin, email, password));
       }
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("getAllUsers() failed: " + e.getMessage());
     }
 
-    close();
+    //close();
     return users;
   }
+
 
   // **************************************************** //
   // ******************** FERÐIR ************************ //
@@ -155,18 +176,17 @@ public class DbMain {
    * @param trip ferð
    */
   public static void insertTrip(Trip trip) {
-    connect();
-    String sql = "INSERT INTO trip(name,price) VALUES(?,?);";
+    String sql = "INSERT INTO daytrip.trip(name,price) VALUES(?,?);";
 
     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-      // stillum parametra
+      // Set parameters
       pstmt.setString(1, trip.getName());
       pstmt.setInt(2, trip.getPrice());
-      // framkvæmum statementið
+
       pstmt.executeUpdate();
       System.out.println("Trip added to database");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("insertTrip() failed: " + e.getMessage());
     }
     close();
   }
@@ -177,10 +197,11 @@ public class DbMain {
   public static ArrayList<Trip> getAllTrips() {
     connect();
     ArrayList<Trip> trips = new ArrayList<>();
-    String sql = "SELECT * FROM trip;";
+    String sql = "SELECT * FROM daytrip.trip;";
 
     try (Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
+
       while(rs.next()) {
         int id = rs.getInt("id");
         String name = rs.getString("name");
@@ -191,7 +212,7 @@ public class DbMain {
         trips.add(new Trip(name, price, reviews));
       }
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("getAllTrips() failed: " + e.getMessage());
     }
 
     close();
@@ -220,10 +241,11 @@ public class DbMain {
       pstmt.executeUpdate();
       System.out.println("Review added to database");
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println("insertReview() failed:" + e.getMessage());
     }
     close();
   }
+
 
   /**
    * @param id referencar trip
@@ -244,7 +266,7 @@ public class DbMain {
         reviews.add(new Review(userEmail, id, text));
       }
     } catch (SQLException e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
     }
 
     close();

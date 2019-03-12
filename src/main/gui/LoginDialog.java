@@ -1,15 +1,17 @@
 package main.gui;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import main.utilities.Account;
 import main.utilities.Language;
 
-import java.util.Locale;
 import java.util.Optional;
 
 public class LoginDialog extends Dialog {
@@ -44,7 +46,7 @@ public class LoginDialog extends Dialog {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField username = new TextField();
+        TextField username = new TextField();;
         username.setPromptText("Username");
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
@@ -83,7 +85,12 @@ public class LoginDialog extends Dialog {
 
         // Trigger
         result.ifPresent(usernamePassword -> {
+            String username1 = usernamePassword.getKey();
+            String password1 = usernamePassword.getValue();
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+
+            Account.login(username1, password1);
+
         });
     }
 

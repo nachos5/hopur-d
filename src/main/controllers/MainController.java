@@ -61,6 +61,7 @@ public class MainController implements Initializable {
       }
       System.out.println();
     }
+    //DbMain.close();
   }
 
   /**
@@ -109,7 +110,7 @@ public class MainController implements Initializable {
       else {
         filtered_trips.setPredicate(s ->
             s.getName().toLowerCase().contains(filter) || // nafnið
-                Integer.toString(s.getPrice()).contains(filter) // verðið
+            Integer.toString(s.getPrice()).contains(filter) // verðið
         );
       }
     });
