@@ -1,5 +1,8 @@
 package database.models;
 
+/**
+ * Enums til að staðfesta að ákveðin gögn sem fara í database-ið séu rétt
+ */
 public class Enums {
 
   public enum Category {

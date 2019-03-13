@@ -1,8 +1,5 @@
 package database.models;
 
-/**
- * heldur utan um öll gögn sem notandi þarf
- */
 public class User {
   private int id;
   private String username;
@@ -10,13 +7,7 @@ public class User {
   private String password;
   private String email;
 
-  /**
-   *
-   * @param us - usename
-   * @param ad - admin
-   * @param em - email
-   * @param pw - password (hashed)
-   */
+  // constructor fyrir röð sem við búum til
   public User(String us, Boolean ad, String em, String pw) {
     username = us;
     admin = ad;
@@ -24,6 +15,7 @@ public class User {
     password = pw;
   }
 
+  // constructor fyrir röð sem við sækjum
   public User(int i, String us, Boolean ad, String em, String pw) {
     this(us, ad, em, pw);
     id = i;

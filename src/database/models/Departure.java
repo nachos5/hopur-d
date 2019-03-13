@@ -9,6 +9,7 @@ public class Departure {
   private Boolean available;
   private int bookings;
 
+  // constructor fyrir röð sem við búum til
   public Departure(Trip t, GregorianCalendar d, Boolean a, int b) {
     trip = t;
     dateBegin = d;
@@ -16,7 +17,7 @@ public class Departure {
     bookings = b;
   }
 
-  // þegar við sækjum hlut er gott að hafa vísun á trip objectinn sem þessi object tilheyrir
+  // constructor fyrir röð sem við sækjum
   public Departure(int i, Trip t, GregorianCalendar d, Boolean a, int b) {
     this(t, d, a, b);
     id = i;

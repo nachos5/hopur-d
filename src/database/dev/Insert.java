@@ -26,6 +26,8 @@ public class Insert {
     createInitialDepartures();
     // upphafs-dómar
     createInitialReviews();
+    // upphafs-bókanir
+    createInitialBookings();
   }
 
   private static void createInitialCompanies() {
@@ -85,9 +87,22 @@ public class Insert {
     reviews.add(new Review(getUser("user"), getTripById(1), "Glatað!", "Ömurleg ganga!", 0.5, true));
     reviews.add(new Review(getUser("Bubbi"), getTripById(2), "Farið til helvítis!", "Ætla að kæra ykkur fyrir ósættanlega framkomu!", 0.0, false));
 
-    for (Review review : reviews) {
+    for (Review review: reviews) {
       insertReview(review);
       delay(50);
     }
   }
+
+  private static void createInitialBookings() {
+    ArrayList<Booking> bookings = new ArrayList<>();
+    bookings.add(new Booking(getUser("admin"), getDepartureById(1), Enums.Status.UNPAID));
+    bookings.add(new Booking(getUser("admin"), getDepartureById(2), Enums.Status.PAID));
+    bookings.add(new Booking(getUser("Bubbi"), getDepartureById(3), Enums.Status.UNPAID));
+
+    for (Booking booking: bookings) {
+      insertBooking(booking);
+      delay(50);
+    }
+  }
+
 }

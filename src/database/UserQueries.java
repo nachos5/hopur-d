@@ -84,7 +84,8 @@ public class UserQueries {
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
-      pstmt.executeQuery(sql);
+      pstmt.executeUpdate();
+      System.out.println("User " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteUserById() failed: " + e.getMessage());
     }

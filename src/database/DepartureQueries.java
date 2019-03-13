@@ -77,6 +77,7 @@ public class DepartureQueries {
         dateBegin.setTime(timestamp);
         Boolean available = rs.getBoolean("available");
         int bookings = rs.getInt("bookings");
+
         return new Departure(id, trip, dateBegin, available, bookings);
       }
     } catch (SQLException e) {
@@ -91,7 +92,8 @@ public class DepartureQueries {
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
-      pstmt.executeQuery(sql);
+      pstmt.executeUpdate();
+      System.out.println("Departure " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteDepartureById() failed: " + e.getMessage());
     }

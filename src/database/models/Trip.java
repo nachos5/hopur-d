@@ -41,8 +41,7 @@ public class Trip {
     company = comp;
   }
 
-  // constructor fyrir ferð sem við sækjum úr database-inu, munurinn er sá að við þurfum ekki enums,
-  // því gögnin voru staðfest við innsettningu og þurfum að geyma reviews fyrir ferðina
+  // constructor fyrir röð sem við búum til
   public Trip(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
               String l, Boolean s, Double r, String de, ArrayList<Review> re) {
     id = i;
@@ -61,7 +60,7 @@ public class Trip {
     reviews = re;
   }
 
-  // constructor með company
+  // constructor fyrir röð sem við sækjum
   public Trip(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
               String l, Boolean s, Double r, String de, Company comp, ArrayList<Review> re) {
     this(i, n, c, p, d, gs, co, ci, a, l, s, r, de, re);

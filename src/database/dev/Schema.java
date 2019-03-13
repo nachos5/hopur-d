@@ -72,11 +72,11 @@ public class Schema {
         ");");
     tables.add("CREATE TABLE daytrip.booking(" +
         "id SERIAL PRIMARY KEY," +
-        "userId INT," +
+        "username VARCHAR(32)," +
         "departureId INT," +
-        "bookedDate TIMESTAMP," +
+        "bookedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
         "status VARCHAR(32)," +
-        "FOREIGN KEY (userId) REFERENCES daytrip.users(id)," +
+        "FOREIGN KEY (username) REFERENCES daytrip.users(username)," +
         "FOREIGN KEY (departureId) REFERENCES daytrip.departure(id)" +
         ");");
 

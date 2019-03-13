@@ -27,6 +27,10 @@ public class Tests {
     departureTests();
     System.out.println();
     reviewTests();
+    System.out.println();
+    bookingTests();
+    System.out.println();
+    deleteTests();
 
     System.out.println();
     System.out.println("TEST ENDA!");
@@ -121,7 +125,47 @@ public class Tests {
   }
 
   private static void reviewTests() {
-    ArrayList<Review> reviews = ReviewQueries.
+    ArrayList<Review> reviews = ReviewQueries.getAllReviews();
+    // öll review og testa alla getera
+    System.out.println("Öll reviews:");
+    for (Review review: reviews) {
+      System.out.println("Id: " + review.getId() + ", Trip Name: " + review.getTrip().getName() + ", Username: " +
+          review.getUser().getUsername() + ", Title: " + review.getTitle() + ", Text: " + review.getText() + ", Rating: " +
+          review.getRating() + ", Is Public: " + review.getIsPublic());
+    }
+
+    // review eftir id-i
+    Review reviewById = ReviewQueries.getReviewById(1);
+    System.out.println("Review með id = 1:");
+    System.out.println("Username: " + reviewById.getUser().getUsername() + ", Text: " + reviewById.getText());
+  }
+
+  private static void bookingTests() {
+    ArrayList<Booking> bookings = BookingQueries.getAllBookings();
+    // öll bookings og testa alla getera
+    System.out.println("Öll bookings:");
+    for (Booking booking: bookings) {
+      System.out.println("Id: " + booking.getId() + ", Username: " + booking.getUser().getUsername() + ", Trip Name: " +
+          booking.getDeparture().getTrip().getName() + ", Departs: " + booking.getDeparture().getDateBegin().getTime() +
+          ", Booked at: " + booking.getBookedAt().getTime() + ", Status: " + booking.getStatus());
+    }
+
+    // booking eftir id-i
+    Booking booking = BookingQueries.getBookingById(1);
+    System.out.println("Booking með id = 1:");
+    System.out.println("Username: " + booking.getUser().getUsername() + ", Trip Name: " + booking.getDeparture().getTrip().getName() +
+        ", Departs: " + booking.getDeparture().getDateBegin().getTime());
+  }
+
+  private static void deleteTests() {
+    ReviewQueries.deleteReviewById(1);
+    ReviewQueries.deleteReviewById(2);
+    BookingQueries.deleteBookingById(1);
+    BookingQueries.deleteBookingById(2);
+    UserQueries.deleteUserById(1);
+    DepartureQueries.deleteDepartureById(1);
+    TripQueries.deleteTripById(1);
+    CompanyQueries.deleteCompanyById(1);
   }
 
 }
