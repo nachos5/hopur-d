@@ -1,6 +1,6 @@
 package main.utilities;
 
-import database.DbMain;
+import database.UserQueries;
 import database.models.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
@@ -25,7 +25,7 @@ public class Account {
     }
 
     public static void login(String username, String password) {
-        User user = DbMain.getUser(username);
+        User user = UserQueries.getUser(username);
 
         System.out.println("user = " + user);
         if (user == null) {

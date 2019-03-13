@@ -2,24 +2,41 @@ package database.models;
 
 public class Review {
 
-  private int userId;
-  private int tripId;
+  private User user;
+  private Trip trip;
+  private String title;
   private String text;
+  private Double rating;
+  private Boolean isPublic;
 
-  public Review(int uId, int tId, String t) {
-    userId = uId;
-    tripId = tId;
-    text = t;
-  }
-  public int getUserId() {
-    return userId;
+  // constructor án trip
+  public Review(User u, String ti, String te, Double r, Boolean p) {
+    user = u;
+    title = ti;
+    text = te;
+    rating = r;
+    isPublic = p;
   }
 
-  public int getTripId() {
-    return tripId;
+  // constructor með trip
+  public Review(User u, Trip t, String ti, String te, Double r, Boolean p) {
+    this(u, ti, te, r, p);
+    trip = t;
   }
+
+  public User getUser() { return user; }
+
+  public Trip getTrip() {
+    return trip;
+  }
+
+  public String getTitle() { return title; }
 
   public String getText() {
     return text;
   }
+
+  public Double getRating() { return rating; }
+
+  public Boolean getIsPublic() { return isPublic; }
 }
