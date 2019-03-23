@@ -1,6 +1,7 @@
 package main.controllers;
 
-import database.DbMain;
+import database.TripQueries;
+import database.UserQueries;
 import database.models.Trip;
 
 import database.models.*;
@@ -50,17 +51,6 @@ public class MainController implements Initializable {
     user_table.setItems(user_models());
     trip_table.setItems(trip_models());
 
-    ArrayList<Trip> users = DbMain.getAllTrips();
-    System.out.println();
-    for (Trip trip: users) {
-      System.out.println("Ferð:");
-      System.out.println("Nafn: " + trip.getName() + ", verð: " + trip.getPrice());
-      System.out.println("Reviews:");
-      for (Review review: trip.getReviews()) {
-        System.out.println("Notandi: " + review.getUserId() + ", texti: " + review.getText());
-      }
-      System.out.println();
-    }
     //DbMain.close();
   }
 
@@ -70,7 +60,7 @@ public class MainController implements Initializable {
    * @return filtered listi af userum eftir text inputinu
    */
   private ObservableList<User> user_models() {
-    ObservableList<User> users = FXCollections.observableArrayList(DbMain.getAllUsers());
+    ObservableList<User> users = FXCollections.observableArrayList(UserQueries.getAllUsers());
 
     // breytum observable listanum í filtered lista fyrir dýnamíska leit
     FilteredList<User> filtered_users = new FilteredList<>(users, s -> true);
@@ -97,7 +87,7 @@ public class MainController implements Initializable {
    * @return filtered listi af ferðum eftir text inputinu
    */
   private FilteredList<Trip> trip_models() {
-    ObservableList<Trip> trips = FXCollections.observableArrayList(DbMain.getAllTrips());
+    ObservableList<Trip> trips = FXCollections.observableArrayList(TripQueries.getAllTrips());
 
     // breytum observable listanum í filtered lista fyrir dýnamíska leit
     FilteredList<Trip> filtered_trips = new FilteredList<>(trips, s -> true);

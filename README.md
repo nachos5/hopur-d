@@ -8,8 +8,8 @@
         - Skipta yfir á 'my_branch'
     - `git merge master`
         - Merge 'my_branc' við master
-    - `git push origin my_branch` 
-        - Uppfæra remote 'my_branch' með local 'my_branch'        
+    - `git push origin my_branch`
+        - Uppfæra remote 'my_branch' með local 'my_branch'
 
 ### Merge
 - Guðmundur sér um að merge'a við masterinn (origin master)
@@ -20,7 +20,7 @@
 **resources:**
 - Myndir o.fl.
 - Dæmi um notkun
-    
+
 ```java
 login = new Dialog<>();
 login.setGraphic(new ImageView(this.getClass().getResource("/login.png").toString()));
@@ -71,3 +71,12 @@ DB_PASSWORD="myPassword"
 * **Postgres**
    * `\dn` - Listar upp schemas
    * `\dt daytrip.*` - Listr upp relations í schema daytrip
+
+
+### Guðmundur - 13/04
+
+- Setti upp skemað, módel, enums, query classa og tests fyrir allt sem við þurfum (held ég).
+- Er allt í database möppunni og endilega skoðið vel, í Tests.java er gott að sjá hvernig ég er að sækja gögnin og nota.
+- Enuminn eru mjög ófullkominn núna en þetta er bara einhver grunnur.
+- Testin eru til að athuga hvort eitthvað brotnar við breytingar, svo það er gott ef við setjum öll queries (fyrir utan inserts)
+  þangað inn.
