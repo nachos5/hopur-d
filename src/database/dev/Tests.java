@@ -1,6 +1,6 @@
 package database.dev;
 
-import database.models.*;
+import models.*;
 import database.BookingQueries;
 import database.CompanyQueries;
 import database.DepartureQueries;
@@ -38,59 +38,59 @@ public class Tests {
   }
 
   private static void userTests() {
-    ArrayList<User> users = UserQueries.getAllUsers();
+    ArrayList<UserModel> users = UserQueries.getAllUsers();
     // allir userar og testa alla getera
     System.out.println("Allir userar:");
-    for (User user: users) {
+    for (UserModel user: users) {
       System.out.println("Id: " + user.getId() + ", Username: " + user.getUsername() + ", Email: " + user.getEmail() +
           ", Password (hash): " + user.getPassword() + ", Admin: " + user.isAdmin());
     }
 
     // user eftir username-i
-    User userById = UserQueries.getUser("admin");
+    UserModel userById = UserQueries.getUser("admin");
     System.out.println("Notandi eftir username-inu admin: ");
     System.out.println("Username: " + userById.getUsername() + ", Email: " + userById.getEmail() + ", Admin: " + userById.isAdmin());
   }
 
 
   private static void companyTests() {
-    ArrayList<Company> companies = CompanyQueries.getAllCompanies();
+    ArrayList<CompanyModel> companies = CompanyQueries.getAllCompanies();
     // öll companies og testa alla getera
     System.out.println("Öll fyrirtæki:");
-    for (Company company: companies) {
+    for (CompanyModel company: companies) {
       System.out.println("Id: " + company.getId() + ", Name: " + company.getName() + ", Description: " +
           company.getDescription() + ", Rating: " + company.getRating());
       System.out.print("Ferðir sem þetta fyrirtæki býður uppá: ");
-      for (Trip trip: company.getTrips()) {
+      for (TripModel trip: company.getTrips()) {
         System.out.print(trip.getName() + ", ");
       }
       System.out.println();
     }
 
     // company eftir id-i
-    Company companyById = CompanyQueries.getCompanyById(1);
+    CompanyModel companyById = CompanyQueries.getCompanyById(1);
     System.out.println("Fyrirtæki með id = 1:");
     System.out.println("Name: " + companyById.getName() + ", Description" + companyById.getDescription());
 
     // company eftir nafni
-    Company companyByName = CompanyQueries.getCompanyByName("Epic Adventures");
+    CompanyModel companyByName = CompanyQueries.getCompanyByName("Epic Adventures");
     System.out.println("Fyrirtæki með nafnið Epic Adventures:");
     System.out.println("Name: " + companyByName.getName() + ", Description" + companyByName.getDescription());
   }
 
 
   private static void tripTests() {
-    ArrayList<Trip> trips = TripQueries.getAllTrips();
+    ArrayList<TripModel> trips = TripQueries.getAllTrips();
     // öll trip og testa alla getera
     System.out.println("Öll trips:");
-    for (Trip trip: trips) {
+    for (TripModel trip: trips) {
       System.out.println("Id: " + trip.getId() + ", Name: " + trip.getName() + ", Category: " + trip.getCategory() + ", Price: " +
           trip.getPrice() + ", Duration: " + trip.getDuration() + ", Group size: " + trip.getGroupSize() + ", Country: " +
           trip.getCountry() + ", City: " + trip.getCity() + ", Accessability: " + trip.getAccessability() + ", Language: " +
           trip.getLanguage() + ", Sustainable: " + trip.isSustainable() + ", Rating: " + trip.getRating() + ", Description: " +
-          trip.getDescription() + ", Company: " + trip.getCompany().getName());
+          trip.getDescription() + ", CompanyModel: " + trip.getCompany().getName());
       System.out.println("Öll review-in fyrir þetta trip:");
-      for (Review review: trip.getReviews()) {
+      for (ReviewModel review: trip.getReviews()) {
         System.out.println("Username: " + review.getUser().getUsername() + ", Text: " + review.getText() +
             ", Rating: " + review.getRating());
       }
@@ -98,62 +98,62 @@ public class Tests {
     }
 
     //  trip eftir id-i
-    Trip tripById = TripQueries.getTripById(1);
-    System.out.println("Trip með id = 1:");
+    TripModel tripById = TripQueries.getTripById(1);
+    System.out.println("TripModel með id = 1:");
     System.out.println("Fyrirtækið sem býður upp á ferðina: " + tripById.getCompany().getName() + ", Nafn: " + tripById.getName());
 
     // test eftir company id
     trips = TripQueries.getTripsByCompanyId(1);
-    for (Trip trip: trips) {
+    for (TripModel trip: trips) {
       System.out.println("Fyrirtækið sem býður upp á ferðina: " + CompanyQueries.getCompanyById(1).getName() + ", Nafn: " + trip.getName());
     }
   }
 
   private static void departureTests() {
-    ArrayList<Departure> departures = DepartureQueries.getAllDepartures();
+    ArrayList<DepartureModel> departures = DepartureQueries.getAllDepartures();
     // Öll departure og testa alla getera
     System.out.println("Öll departures:");
-    for (Departure departure: departures) {
-      System.out.println("Id: " + departure.getId() + ", Trip Name: " + departure.getTrip().getName() + ", Date Begin: " +
+    for (DepartureModel departure: departures) {
+      System.out.println("Id: " + departure.getId() + ", TripModel Name: " + departure.getTrip().getName() + ", Date Begin: " +
           departure.getDateBegin().getTime() + ", Available: " + departure.getAvailable() + ", Bookings: " + departure.getBookings());
     }
 
     // departure eftir id-i
-    Departure departureById = DepartureQueries.getDepartureById(1);
-    System.out.println("Departure með id = 1:");
-    System.out.println("Trip Name: " + departureById.getTrip().getName() + ", Date Begin: " + departureById.getDateBegin().getTime());
+    DepartureModel departureById = DepartureQueries.getDepartureById(1);
+    System.out.println("DepartureModel með id = 1:");
+    System.out.println("TripModel Name: " + departureById.getTrip().getName() + ", Date Begin: " + departureById.getDateBegin().getTime());
   }
 
   private static void reviewTests() {
-    ArrayList<Review> reviews = ReviewQueries.getAllReviews();
+    ArrayList<ReviewModel> reviews = ReviewQueries.getAllReviews();
     // öll review og testa alla getera
     System.out.println("Öll reviews:");
-    for (Review review: reviews) {
-      System.out.println("Id: " + review.getId() + ", Trip Name: " + review.getTrip().getName() + ", Username: " +
+    for (ReviewModel review: reviews) {
+      System.out.println("Id: " + review.getId() + ", TripModel Name: " + review.getTrip().getName() + ", Username: " +
           review.getUser().getUsername() + ", Title: " + review.getTitle() + ", Text: " + review.getText() + ", Rating: " +
           review.getRating() + ", Is Public: " + review.getIsPublic());
     }
 
     // review eftir id-i
-    Review reviewById = ReviewQueries.getReviewById(1);
-    System.out.println("Review með id = 1:");
+    ReviewModel reviewById = ReviewQueries.getReviewById(1);
+    System.out.println("ReviewModel með id = 1:");
     System.out.println("Username: " + reviewById.getUser().getUsername() + ", Text: " + reviewById.getText());
   }
 
   private static void bookingTests() {
-    ArrayList<Booking> bookings = BookingQueries.getAllBookings();
+    ArrayList<BookingModel> bookings = BookingQueries.getAllBookings();
     // öll bookings og testa alla getera
     System.out.println("Öll bookings:");
-    for (Booking booking: bookings) {
-      System.out.println("Id: " + booking.getId() + ", Username: " + booking.getUser().getUsername() + ", Trip Name: " +
+    for (BookingModel booking: bookings) {
+      System.out.println("Id: " + booking.getId() + ", Username: " + booking.getUser().getUsername() + ", TripModel Name: " +
           booking.getDeparture().getTrip().getName() + ", Departs: " + booking.getDeparture().getDateBegin().getTime() +
           ", Booked at: " + booking.getBookedAt().getTime() + ", Status: " + booking.getStatus());
     }
 
     // booking eftir id-i
-    Booking booking = BookingQueries.getBookingById(1);
-    System.out.println("Booking með id = 1:");
-    System.out.println("Username: " + booking.getUser().getUsername() + ", Trip Name: " + booking.getDeparture().getTrip().getName() +
+    BookingModel booking = BookingQueries.getBookingById(1);
+    System.out.println("BookingModel með id = 1:");
+    System.out.println("Username: " + booking.getUser().getUsername() + ", TripModel Name: " + booking.getDeparture().getTrip().getName() +
         ", Departs: " + booking.getDeparture().getDateBegin().getTime());
   }
 

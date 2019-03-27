@@ -1,22 +1,22 @@
 package main.utilities;
 
 import database.UserQueries;
-import database.models.User;
+import models.UserModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 
 public class Account {
 
-    private static User currentUser;
+    private static UserModel currentUser;
     private static SimpleStringProperty currentUsername;
-    private static final User noUser  = new User("NoUser", false, "NoUser@gmail.com","NoUserPassword");
+    private static final UserModel noUser  = new UserModel("NoUser", false, "NoUser@gmail.com","NoUserPassword");
 
     static {
         currentUser = noUser;
         currentUsername = new SimpleStringProperty("");
     }
 
-    public static User getCurrentUser() {
+    public static UserModel getCurrentUser() {
         return currentUser;
     }
 
@@ -25,7 +25,7 @@ public class Account {
     }
 
     public static void login(String username, String password) {
-        User user = UserQueries.getUser(username);
+        UserModel user = UserQueries.getUser(username);
 
         System.out.println("user = " + user);
         if (user == null) {

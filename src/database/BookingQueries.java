@@ -1,13 +1,13 @@
 package database;
 
-import database.models.Booking;
+import models.BookingModel;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class BookingQueries {
-  public static void insertBooking(Booking booking) {
+  public static void insertBooking(BookingModel booking) {
     String sql = "INSERT INTO daytrip.booking(username,departureId,status) VALUES (?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -17,14 +17,14 @@ public class BookingQueries {
       pstmt.setString(3, booking.getStatus());
 
       pstmt.executeUpdate();
-      System.out.println("Booking added to database");
+      System.out.println("BookingModel added to database");
     } catch (SQLException e) {
       System.err.println("insertBooking() failed: " + e.getMessage());
     }
   }
 
-  public static ArrayList<Booking> getAllBookings() {
-    ArrayList<Booking> bookings = new ArrayList<>();
+  public static ArrayList<BookingModel> getAllBookings() {
+    ArrayList<BookingModel> bookings = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.booking;";
 
     try (Statement stmt = DbMain.conn.createStatement();
@@ -41,7 +41,7 @@ public class BookingQueries {
 
         // bætum bókuninni í listann
         bookings.add(
-            new Booking(id, UserQueries.getUser(username), DepartureQueries.getDepartureById(departureId), bookedAt, status)
+            new BookingModel(id, UserQueries.getUser(username), DepartureQueries.getDepartureById(departureId), bookedAt, status)
         );
       }
     } catch (SQLException e) {
@@ -51,7 +51,7 @@ public class BookingQueries {
     return bookings;
   }
 
-  public static Booking getBookingById(int bookingId) {
+  public static BookingModel getBookingById(int bookingId) {
     String sql = "SELECT * FROM daytrip.booking where id=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -67,7 +67,7 @@ public class BookingQueries {
         bookedAt.setTime(timestamp);
         String status = rs.getString("status");
 
-        return new Booking(id, UserQueries.getUser(username), DepartureQueries.getDepartureById(departureId), bookedAt, status);
+        return new BookingModel(id, UserQueries.getUser(username), DepartureQueries.getDepartureById(departureId), bookedAt, status);
       }
     } catch (SQLException e) {
       System.err.println("getBookingById() failed: " + e.getMessage());
@@ -82,7 +82,7 @@ public class BookingQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("Booking " + id + " deleted");
+      System.out.println("BookingModel " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteBookingById() failed: " + e.getMessage());
     }

@@ -1,16 +1,16 @@
-package database.models;
+package models;
 
 import java.util.GregorianCalendar;
 
-public class Departure {
+public class DepartureModel {
   private int id;
-  private Trip trip; // mér finnst þetta meika meiri sense heldur en að extenda
+  private TripModel trip; // mér finnst þetta meika meiri sense heldur en að extenda
   private GregorianCalendar dateBegin;
   private Boolean available;
   private int bookings;
 
   // constructor fyrir röð sem við búum til
-  public Departure(Trip t, GregorianCalendar d, Boolean a, int b) {
+  public DepartureModel(TripModel t, GregorianCalendar d, Boolean a, int b) {
     trip = t;
     dateBegin = d;
     available = a;
@@ -18,14 +18,14 @@ public class Departure {
   }
 
   // constructor fyrir röð sem við sækjum
-  public Departure(int i, Trip t, GregorianCalendar d, Boolean a, int b) {
+  public DepartureModel(int i, TripModel t, GregorianCalendar d, Boolean a, int b) {
     this(t, d, a, b);
     id = i;
   }
 
   public int getId() { return id; }
 
-  public Trip getTrip() { return trip; }
+  public TripModel getTrip() { return trip; }
 
   public GregorianCalendar getDateBegin() { return dateBegin; }
 

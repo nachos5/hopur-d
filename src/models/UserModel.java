@@ -1,6 +1,6 @@
-package database.models;
+package models;
 
-public class User {
+public class UserModel {
   private int id;
   private String username;
   private Boolean admin;
@@ -8,7 +8,7 @@ public class User {
   private String email;
 
   // constructor fyrir röð sem við búum til
-  public User(String us, Boolean ad, String em, String pw) {
+  public UserModel(String us, Boolean ad, String em, String pw) {
     username = us;
     admin = ad;
     email = em;
@@ -16,7 +16,7 @@ public class User {
   }
 
   // constructor fyrir röð sem við sækjum
-  public User(int i, String us, Boolean ad, String em, String pw) {
+  public UserModel(int i, String us, Boolean ad, String em, String pw) {
     this(us, ad, em, pw);
     id = i;
   }
