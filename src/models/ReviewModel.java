@@ -1,17 +1,17 @@
-package database.models;
+package models;
 
-public class Review {
+public class ReviewModel {
 
   private int id;
-  private User user;
-  private Trip trip;
+  private UserModel user;
+  private TripModel trip;
   private String title;
   private String text;
   private Double rating;
   private Boolean isPublic;
 
   // constructor fyrir röð sem við búum til
-  public Review(User u, String ti, String te, Double r, Boolean p) {
+  public ReviewModel(UserModel u, String ti, String te, Double r, Boolean p) {
     user = u;
     title = ti;
     text = te;
@@ -20,19 +20,19 @@ public class Review {
   }
 
   // constructor fyrir röð sem við sækjum, með id-i
-  public Review(int i, User u, String ti, String te, Double r, Boolean p) {
+  public ReviewModel(int i, UserModel u, String ti, String te, Double r, Boolean p) {
     this(u, ti, te, r, p);
     id = i;
   }
 
   // constructor fyrir röð sem við sækjum, með trip
-  public Review(User u, Trip t, String ti, String te, Double r, Boolean p) {
+  public ReviewModel(UserModel u, TripModel t, String ti, String te, Double r, Boolean p) {
     this(u, ti, te, r, p);
     trip = t;
   }
 
   // constructor fyrir röð sem við sækjum, með trip og id
-  public Review(int i, User u, Trip t, String ti, String te, Double r, Boolean p) {
+  public ReviewModel(int i, UserModel u, TripModel t, String ti, String te, Double r, Boolean p) {
     this(u, ti, te, r, p);
     id = i;
     trip = t;
@@ -40,9 +40,9 @@ public class Review {
 
   public int getId() { return id; }
 
-  public User getUser() { return user; }
+  public UserModel getUser() { return user; }
 
-  public Trip getTrip() {
+  public TripModel getTrip() {
     return trip;
   }
 

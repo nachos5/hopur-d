@@ -1,23 +1,23 @@
-package database.models;
+package models;
 
 import java.util.GregorianCalendar;
 
-public class Booking {
+public class BookingModel {
   private int id;
-  private User user;
-  private Departure departure;
+  private UserModel user;
+  private DepartureModel departure;
   private GregorianCalendar bookedAt;
   private String status;
 
   // constructor fyrir röð sem við búum til
-  public Booking(User u, Departure d, Enums.Status s) {
+  public BookingModel(UserModel u, DepartureModel d, Enums.Status s) {
     user = u;
     departure = d;
     status = Enums.resolveStatus(s);
   }
 
   // constructor fyrir röð sem við sækjum
-  public Booking(int i, User u, Departure d, GregorianCalendar g, String s) {
+  public BookingModel(int i, UserModel u, DepartureModel d, GregorianCalendar g, String s) {
     id = i;
     user = u;
     departure = d;
@@ -27,9 +27,9 @@ public class Booking {
 
   public int getId() { return id; }
 
-  public User getUser() { return user; }
+  public UserModel getUser() { return user; }
 
-  public Departure getDeparture() { return departure; }
+  public DepartureModel getDeparture() { return departure; }
 
   public GregorianCalendar getBookedAt() { return bookedAt; }
 

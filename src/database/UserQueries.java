@@ -1,6 +1,6 @@
 package database;
 
-import database.models.User;
+import models.UserModel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class UserQueries {
 
-  public static void insertUser(User user) {
+  public static void insertUser(UserModel user) {
     String sql = "INSERT INTO daytrip.users(username,admin,email,password) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -21,7 +21,7 @@ public class UserQueries {
       pstmt.setString(4, user.getPassword());
       // framkvæmum statementið
       pstmt.executeUpdate();
-      System.out.println("User added to database");
+      System.out.println("UserModel added to database");
     } catch (SQLException e) {
       System.err.println("insertUser() failed:" + e.getMessage());
     }
@@ -33,7 +33,7 @@ public class UserQueries {
    * @param username
    * @return
    */
-  public static User getUser(String username) {
+  public static UserModel getUser(String username) {
     String sql = "SELECT * FROM daytrip.users WHERE username = ?";
 
     try {
@@ -43,7 +43,7 @@ public class UserQueries {
       ResultSet rs = pstmt.executeQuery();
       rs.next();
 
-      return new User(
+      return new UserModel(
           rs.getString("username"),
           rs.getBoolean("admin"),
           rs.getString("email"),
@@ -56,8 +56,8 @@ public class UserQueries {
   }
 
 
-  public static ArrayList<User> getAllUsers() {
-    ArrayList<User> users = new ArrayList<>();
+  public static ArrayList<UserModel> getAllUsers() {
+    ArrayList<UserModel> users = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.users;";
 
     //connect();
@@ -69,7 +69,7 @@ public class UserQueries {
         String email = rs.getString("email");
         String password = rs.getString("password");
         // bætum við notandanum í listann
-        users.add(new User(username, admin, email, password));
+        users.add(new UserModel(username, admin, email, password));
       }
     } catch (SQLException e) {
       System.err.println("getAllUsers() failed: " + e.getMessage());
@@ -85,7 +85,7 @@ public class UserQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("User " + id + " deleted");
+      System.out.println("UserModel " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteUserById() failed: " + e.getMessage());
     }

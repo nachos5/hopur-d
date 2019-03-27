@@ -32,7 +32,7 @@ public class Schema {
         "id SERIAL PRIMARY KEY," +
         "name VARCHAR(49) UNIQUE," +
         "rating NUMERIC(2,1)," +
-        "description VARCHAR(999)" +
+        "description TEXT" +
         ");");
     tables.add("CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +

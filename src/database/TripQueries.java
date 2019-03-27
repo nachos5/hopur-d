@@ -1,7 +1,7 @@
 package database;
 
-import database.models.Review;
-import database.models.Trip;
+import models.ReviewModel;
+import models.TripModel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ public class TripQueries {
    *
    * @param trip ferð
    */
-  public static void insertTrip(Trip trip) {
+  public static void insertTrip(TripModel trip) {
     String sql = "INSERT INTO daytrip.trip(name,category,price,duration,groupSize,country,city,accessability," +
         "language,sustainable,rating,description,companyId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
@@ -36,7 +36,7 @@ public class TripQueries {
       pstmt.setInt(13, trip.getCompany().getId());
 
       pstmt.executeUpdate();
-      System.out.println("Trip added to database");
+      System.out.println("TripModel added to database");
     } catch (SQLException e) {
       System.err.println("insertTrip() failed: " + e.getMessage());
     }
@@ -46,9 +46,9 @@ public class TripQueries {
   /**
    * @return array listi með öllum ferðum úr databaseinu
    */
-  public static ArrayList<Trip> getAllTrips() {
+  public static ArrayList<TripModel> getAllTrips() {
     //connect();
-    ArrayList<Trip> trips = new ArrayList<>();
+    ArrayList<TripModel> trips = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.trip;";
 
     try (Statement stmt = DbMain.conn.createStatement();
@@ -70,10 +70,10 @@ public class TripQueries {
         String description = rs.getString("description");
         int companyId = rs.getInt("companyId");
         // sækjum öll review fyrir ferðina!
-        ArrayList<Review> reviews = ReviewQueries.getReviewsForTrip(id, false);
+        ArrayList<ReviewModel> reviews = ReviewQueries.getReviewsForTrip(id, false);
         // bætum við ferðinni í listann
         trips.add(
-            new Trip(id, name, category, price, duration, groupSize, country, city, accessability, language,
+            new TripModel(id, name, category, price, duration, groupSize, country, city, accessability, language,
                 sustainability, rating, description, CompanyQueries.getCompanyById(companyId), reviews)
         );
       }
@@ -87,9 +87,9 @@ public class TripQueries {
   /**
    * Nær í ferð úr database-inu eftir id-i
    * @param tripId id ferðarinnar
-   * @return Trip object
+   * @return TripModel object
    */
-  public static Trip getTripById(int tripId) {
+  public static TripModel getTripById(int tripId) {
     String sql = "SELECT * FROM daytrip.trip WHERE id=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -112,9 +112,9 @@ public class TripQueries {
         String description = rs.getString("description");
         int companyId = rs.getInt("companyId");
         // sækjum öll review fyrir ferðina!
-        ArrayList<Review> reviews = ReviewQueries.getReviewsForTrip(id, false);
+        ArrayList<ReviewModel> reviews = ReviewQueries.getReviewsForTrip(id, false);
         // bætum við ferðinni í listann
-        return new Trip(id, name, category, price, duration, groupSize, country, city, accessability, language,
+        return new TripModel(id, name, category, price, duration, groupSize, country, city, accessability, language,
             sustainability, rating, description, CompanyQueries.getCompanyById(companyId), reviews);
       }
     } catch (SQLException e) {
@@ -128,8 +128,8 @@ public class TripQueries {
    * @param compId id fyrirtækisins
    * @return ArrayListi með öllum ferðum sem innihalda þetta fyrirtækja id
    */
-  public static ArrayList<Trip> getTripsByCompanyId(int compId) {
-    ArrayList<Trip> trips = new ArrayList<>();
+  public static ArrayList<TripModel> getTripsByCompanyId(int compId) {
+    ArrayList<TripModel> trips = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.trip WHERE companyId=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -151,9 +151,9 @@ public class TripQueries {
         Double rating = rs.getDouble("rating");
         String description = rs.getString("description");
         // sækjum öll review fyrir ferðina!
-        ArrayList<Review> reviews = ReviewQueries.getReviewsForTrip(id, false);
+        ArrayList<ReviewModel> reviews = ReviewQueries.getReviewsForTrip(id, false);
         // bætum við ferðinni í listann
-        trips.add(new Trip(id, name, category, price, duration, groupSize, country, city, accessability, language,
+        trips.add(new TripModel(id, name, category, price, duration, groupSize, country, city, accessability, language,
             sustainability, rating, description, reviews));
       }
     } catch (SQLException e) {
@@ -172,7 +172,7 @@ public class TripQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("Trip " + id + " deleted");
+      System.out.println("TripModel " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteTripById() failed: " + e.getMessage());
     }

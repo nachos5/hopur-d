@@ -1,11 +1,11 @@
-package database.models;
+package models;
 
 import java.util.ArrayList;
 
 /**
  * heldur utan um öll gögn sem ferð þarf
  */
-public class Trip {
+public class TripModel {
   private int id;
   private String name;
   private String category;
@@ -19,13 +19,13 @@ public class Trip {
   private Boolean sustainable;
   private Double rating;
   private String description;
-  private Company company;
+  private CompanyModel company;
 
-  private ArrayList<Review> reviews;
+  private ArrayList<ReviewModel> reviews;
 
   // constructor þegar við ætlum að inserta í database-ið, notum enums til að staðfesta gögnin
-  public Trip(String n, Enums.Category c, int p, int d, int gs, Enums.Country co, Enums.City ci,
-              Enums.Accessability a, Enums.Language l, Boolean s, Double r, String de, Company comp) {
+  public TripModel(String n, Enums.Category c, int p, int d, int gs, Enums.Country co, Enums.City ci,
+                   Enums.Accessability a, Enums.Language l, Boolean s, Double r, String de, CompanyModel comp) {
     name = n;
     category = Enums.resolveCategory(c);
     price = p;
@@ -42,8 +42,8 @@ public class Trip {
   }
 
   // constructor fyrir röð sem við búum til
-  public Trip(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
-              String l, Boolean s, Double r, String de, ArrayList<Review> re) {
+  public TripModel(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
+                   String l, Boolean s, Double r, String de, ArrayList<ReviewModel> re) {
     id = i;
     name = n;
     category = c;
@@ -61,8 +61,8 @@ public class Trip {
   }
 
   // constructor fyrir röð sem við sækjum
-  public Trip(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
-              String l, Boolean s, Double r, String de, Company comp, ArrayList<Review> re) {
+  public TripModel(int i, String n, String c, int p, int d, int gs, String co, String ci, String a,
+                   String l, Boolean s, Double r, String de, CompanyModel comp, ArrayList<ReviewModel> re) {
     this(i, n, c, p, d, gs, co, ci, a, l, s, r, de, re);
     company = comp;
   }
@@ -95,9 +95,9 @@ public class Trip {
 
   public String getDescription() { return description; }
 
-  public Company getCompany() { return company; }
+  public CompanyModel getCompany() { return company; }
 
-  public ArrayList<Review> getReviews() {
+  public ArrayList<ReviewModel> getReviews() {
     return reviews;
   }
 }
