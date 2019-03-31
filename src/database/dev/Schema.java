@@ -46,8 +46,7 @@ public class Schema {
         "accessability VARCHAR(32)," +
         "language VARCHAR(32)," +
         "sustainable BOOLEAN," +
-        "rating NUMERIC(2,1)," +
-        "description VARCHAR(999)," +
+        "description TEXT," +
         "companyId int," +
         "FOREIGN KEY (companyId) REFERENCES daytrip.company(id)" +
         ");");

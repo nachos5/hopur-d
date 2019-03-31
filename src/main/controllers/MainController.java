@@ -2,9 +2,8 @@ package main.controllers;
 
 import database.TripQueries;
 import database.UserQueries;
-import models.TripModel;
+import models.Trip;
 
-import models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -14,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import models.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,20 +21,20 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
   @FXML
-  public TableView<TripModel> trip_table;
+  public TableView<Trip> trip_table;
   @FXML
-  public TableColumn<TripModel, String> trip_table_name;
+  public TableColumn<Trip, String> trip_table_name;
   @FXML
-  public TableColumn<TripModel, Integer> trip_table_price;
+  public TableColumn<Trip, Integer> trip_table_price;
   @FXML
   public TextField trip_table_search;
 
   @FXML
-  public TableView<UserModel> user_table;
+  public TableView<User> user_table;
   @FXML
-  public TableColumn<UserModel, String> user_table_username;
+  public TableColumn<User, String> user_table_username;
   @FXML
-  public TableColumn<UserModel, String> user_table_email;
+  public TableColumn<User, String> user_table_email;
   @FXML
   public TextField user_table_search;
 
@@ -58,11 +58,11 @@ public class MainController implements Initializable {
    *
    * @return filtered listi af userum eftir text inputinu
    */
-  private ObservableList<UserModel> user_models() {
-    ObservableList<UserModel> users = FXCollections.observableArrayList(UserQueries.getAllUsers());
+  private ObservableList<User> user_models() {
+    ObservableList<User> users = FXCollections.observableArrayList(UserQueries.getAllUsers());
 
     // breytum observable listanum í filtered lista fyrir dýnamíska leit
-    FilteredList<UserModel> filtered_users = new FilteredList<>(users, s -> true);
+    FilteredList<User> filtered_users = new FilteredList<>(users, s -> true);
 
     user_table_search.textProperty().addListener(obs -> {
       String filter = user_table_search.getText();
@@ -85,11 +85,11 @@ public class MainController implements Initializable {
    *
    * @return filtered listi af ferðum eftir text inputinu
    */
-  private FilteredList<TripModel> trip_models() {
-    ObservableList<TripModel> trips = FXCollections.observableArrayList(TripQueries.getAllTrips());
+  private FilteredList<Trip> trip_models() {
+    ObservableList<Trip> trips = FXCollections.observableArrayList(TripQueries.getAllTrips());
 
     // breytum observable listanum í filtered lista fyrir dýnamíska leit
-    FilteredList<TripModel> filtered_trips = new FilteredList<>(trips, s -> true);
+    FilteredList<Trip> filtered_trips = new FilteredList<>(trips, s -> true);
 
     trip_table_search.textProperty().addListener(obs -> {
       String filter = trip_table_search.getText();

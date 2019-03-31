@@ -6,17 +6,17 @@ package models;
 public class Enums {
 
   public enum Category {
-    FJALLGANGA, JOKLAFERD, RUTUFERD
+    MOUNTAIN, GLACIER, BUS
   }
 
   public static String resolveCategory(Category c) {
     switch (c) {
-      case FJALLGANGA:
-        return "Fjallganga";
-      case JOKLAFERD:
-        return "Jöklaferð";
-      case RUTUFERD:
-        return "Rútuferð";
+      case MOUNTAIN:
+        return "Mountain trip";
+      case GLACIER:
+        return "Glacier trip";
+      case BUS:
+        return "Bus trip";
       default: // kemst augljóslega aldrei hingað en java vælir ef þetta er ekki...
         return "";
     }
