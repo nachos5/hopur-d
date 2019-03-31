@@ -69,6 +69,9 @@ public class TestTripUtils {
     assertNotEquals(totalFromUtils, "þetta er strengur");
   }
 
+  /**
+   * duration is stored as an integer of minutes, lets test when converting to a hh:mm string
+   */
   @Test
   public void testDuration() {
     String durationFromUtils = TripUtils.durationToHourString(trip);
@@ -80,20 +83,25 @@ public class TestTripUtils {
     assertEquals(durationFromUtils, durationString);
   }
 
+  /**
+   * the mean of all the review ratings of the trip
+   */
   @Test
   public void testReviewsMean() {
     double mean = TripUtils.reviewMean(trip);
-    // meðaltalið ætti ekki að fara yfir 5.0 eða undir 0.0
-    assertTrue(mean <= 5.0 && mean >= 0.0);
+    // the range should be 0.0 - 5.0
+    assertTrue(mean >= 0.0 && mean <= 5.0);
   }
 
+  /**
+   * there is one review per user, lets check if that util function functions like it's supposed to
+   */
   @Test
   public void testIfUserHasReviewedTrip() {
     User user = UserQueries.getUser("admin");
     boolean hasReviewed = TripUtils.userHasReviewedTrip(user, trip);
 
     assertFalse(hasReviewed);
-
     Review review = new Review(user, "Very nice", "Very nice trip", 4.0, true);
     trip.addReview(review);
     hasReviewed = TripUtils.userHasReviewedTrip(user, trip);
@@ -101,6 +109,9 @@ public class TestTripUtils {
     assertTrue(hasReviewed);
   }
 
+  /**
+   * lets test getting the total all-time booking count of the trip
+   */
   @Test
   public void testTotalBookings() {
     int total = TripUtils.getTotalBookings(trips.get(0));
