@@ -1,5 +1,7 @@
 package models.utils;
 
+import database.DepartureQueries;
+import models.Departure;
 import models.Review;
 import models.Trip;
 import models.User;
@@ -79,5 +81,12 @@ public class TripUtils {
     return false;
   }
 
-
+  public static int getTotalBookings(Trip trip) {
+    int total = 0;
+    ArrayList<Departure> departures = DepartureQueries.getAllTripDepartures(trip.getId());
+    for (Departure departure: departures) {
+      total += departure.getBookings();
+    }
+    return total;
+  }
 }

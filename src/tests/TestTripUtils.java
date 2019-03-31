@@ -46,6 +46,11 @@ public class TestTripUtils {
         Enums.Language.EN, false, "This trip is so epic! You have to do this before you die!!!!", CompanyQueries.getCompanyById(1), reviews);
   }
 
+  @After
+  public void after() {
+    trip = null;
+  }
+
   @AfterClass
   public static void afterAll() {
     System.out.println("Done testing trips");
@@ -94,6 +99,12 @@ public class TestTripUtils {
     hasReviewed = TripUtils.userHasReviewedTrip(user, trip);
 
     assertTrue(hasReviewed);
+  }
+
+  @Test
+  public void testTotalBookings() {
+    int total = TripUtils.getTotalBookings(trips.get(0));
+    assertTrue(total >= 0);
   }
 
 }

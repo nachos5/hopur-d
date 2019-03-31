@@ -97,7 +97,7 @@ public class Insert {
     ArrayList<Booking> bookings = new ArrayList<>();
     bookings.add(new Booking(getUser("admin"), getDepartureById(1), Enums.Status.UNPAID));
     bookings.add(new Booking(getUser("admin"), getDepartureById(2), Enums.Status.PAID));
-    bookings.add(new Booking(getUser("testuser1"), getDepartureById(3), Enums.Status.UNPAID));
+    bookings.add(new Booking(getUser("testuser1"), getDepartureById(1), Enums.Status.UNPAID));
 
     for (Booking booking: bookings) {
       insertBooking(booking);
