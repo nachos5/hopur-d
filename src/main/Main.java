@@ -47,7 +47,7 @@ public class Main extends Application {
         root.setCenter(myMenu);
 
         // Create a new scene with root
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 800, 400);
 
         // Set the scene to the stage
         stage.titleProperty().bind(Language.createStringBinding("Main.title"));

@@ -2,12 +2,22 @@ package main.gui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
+import java.io.IOException;
+import java.util.ResourceBundle;
+
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import main.utilities.Account;
 import main.utilities.Language;
+import main.utilities.UTF8Control;
+import main.Main;
 
 public class MainMenuBar extends AnchorPane {
 
@@ -34,19 +44,35 @@ public class MainMenuBar extends AnchorPane {
 
         // File -> Login, Quit
         Menu file = new Menu();
+        Menu menuNew = new Menu();
+
+        MenuItem trip = new MenuItem();
         login = new MenuItem("Login");
         MenuItem quit = new MenuItem("Quit");
 
+        //Add items to menuNew
+        menuNew.getItems().add(trip);
+
         // Text properties
         file.textProperty().bind(Language.createStringBinding("MenuBar.file"));
+        menuNew.textProperty().bind(Language.createStringBinding("MenuBar.new"));
+        trip.textProperty().bind(Language.createStringBinding("MenuBar.trip"));
         login.textProperty().bind(Language.createStringBinding("MenuBar.login"));
         quit.textProperty().bind(Language.createStringBinding("MenuBar.quit"));
 
         // Item events
+        trip.setOnAction((e) -> {
+            try {
+                newTripHandler(e);
+            } catch(IOException err) {
+                System.err.println("Menubar new -> trip error: " + err);
+            }
+        });
         login.setOnAction(e -> loginHandler(e));
         quit.setOnAction(e -> Platform.exit());
 
         // Add items to menu file
+        file.getItems().add(menuNew);
         file.getItems().add(login);
         file.getItems().add(quit);
 
@@ -111,5 +137,19 @@ public class MainMenuBar extends AnchorPane {
     private void languageHandler(ActionEvent event) {
         String id = ((MenuItem) event.getSource()).getId();
         Language.setLocale(id);
+    }
+
+    private void newTripHandler(ActionEvent event) throws IOException {
+        ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
+        Parent newTrip = FXMLLoader.load(getClass().getResource("../fxml/NewTrip.fxml"), bundle);
+
+        //Main.getRoot().setCenter(newTrip);
+
+        // Set dialog
+        Scene scene = new Scene(newTrip, 400, 600);
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 }

@@ -46,7 +46,7 @@ public class LoginDialog extends Dialog {
 
         // Set the button types.
         ButtonType okButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Login", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         // Add buttons to dialog
         login.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
