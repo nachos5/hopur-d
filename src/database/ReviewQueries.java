@@ -1,18 +1,33 @@
 package database;
 
-import models.*;
+import models.Review;
+import models.Trip;
+import models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class ReviewQueries {
 
+  private static Review resultSetToReview(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    String title = rs.getString("title");
+    String text = rs.getString("text");
+    Double rating = rs.getDouble("rating");
+    Boolean isPublic = rs.getBoolean("isPublic");
+    String username = rs.getString("username");
+    User user = UserQueries.getUser(username);
+    int tripId = rs.getInt("tripId");
+    Trip trip = TripQueries.getTripById(tripId);
+    return new Review(id, user, trip, title, text, rating, isPublic);
+  }
+
   /**
    * setur inn review í databaseið með prepare-uðu statementi
    *
    * @param review ...
    */
-  public static void insertReview(ReviewModel review) {
+  public static void insertReview(Review review) {
     String sql = "INSERT INTO daytrip.review(username,tripId,title,text,rating,isPublic) VALUES(?,?,?,?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -25,33 +40,23 @@ public class ReviewQueries {
       pstmt.setBoolean(6, review.getIsPublic());
       // framkvæmum statementið
       pstmt.executeUpdate();
-      System.out.println("ReviewModel added to database");
+      System.out.println("Review added to database");
     } catch (SQLException e) {
       System.err.println("insertReview() failed:" + e.getMessage());
     }
   }
 
-  public static ArrayList<ReviewModel> getAllReviews() {
-    ArrayList<ReviewModel> reviews = new ArrayList<>();
+  public static ArrayList<Review> getAllReviews() {
+    ArrayList<Review> reviews = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.review;";
 
     try (Statement stmt = DbMain.conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String title = rs.getString("title");
-        String text = rs.getString("text");
-        Double rating = rs.getDouble("rating");
-        Boolean isPublic = rs.getBoolean("isPublic");
-        String username = rs.getString("username");
-        UserModel user = UserQueries.getUser(username);
-        int tripId = rs.getInt("tripId");
-        TripModel trip = TripQueries.getTripById(tripId);
+        Review review = resultSetToReview(rs);
         // bætum við ferðinni í listann
-        reviews.add(
-            new ReviewModel(id, user, trip, title, text, rating, isPublic)
-        );
+        reviews.add(review);
       }
     } catch (SQLException e) {
       System.err.println("getAllReviews() failed: " + e.getMessage());
@@ -60,7 +65,7 @@ public class ReviewQueries {
     return reviews;
   }
 
-  public static ReviewModel getReviewById(int revId) {
+  public static Review getReviewById(int revId) {
     String sql = "SELECT * FROM daytrip.review where id=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -68,15 +73,7 @@ public class ReviewQueries {
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String username = rs.getString("username");
-        int tripId = rs.getInt("tripId");
-        String title = rs.getString("title");
-        String text = rs.getString("text");
-        Double rating = rs.getDouble("rating");
-        Boolean isPublic = rs.getBoolean("isPublic");
-
-        return new ReviewModel(id, UserQueries.getUser(username), TripQueries.getTripById(tripId), title, text, rating, isPublic);
+        return resultSetToReview(rs);
       }
     } catch (SQLException e) {
       System.err.println("getReviewById() failed: " + e.getMessage());
@@ -87,11 +84,11 @@ public class ReviewQueries {
 
   /**
    * @param tripId referencar trip
-   * @param includeTrip hvort review objectarnir eigi að innihalda TripModel, augljóslega óþarfi ef við vitum trippið
+   * @param includeTrip hvort review objectarnir eigi að innihalda Trip, augljóslega óþarfi ef við vitum trippið
    * @return array listi með öllum reviews úr databaseinu með tilteknu trip id-i
    */
-  public static ArrayList<ReviewModel> getReviewsForTrip(int tripId, Boolean includeTrip) {
-    ArrayList<ReviewModel> reviews = new ArrayList<>();
+  public static ArrayList<Review> getReviewsForTrip(int tripId, Boolean includeTrip) {
+    ArrayList<Review> reviews = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.review where tripId=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -107,11 +104,11 @@ public class ReviewQueries {
         // bætum við ferðinni í listann
         if (includeTrip) {
           reviews.add(
-              new ReviewModel(id, UserQueries.getUser(username), TripQueries.getTripById(tripId), title, text, rating, isPublic)
+              new Review(id, UserQueries.getUser(username), TripQueries.getTripById(tripId), title, text, rating, isPublic)
           );
         } else {
           reviews.add(
-              new ReviewModel(UserQueries.getUser(username), title, text, rating, isPublic)
+              new Review(UserQueries.getUser(username), title, text, rating, isPublic)
           );
         }
       }
@@ -128,7 +125,7 @@ public class ReviewQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("ReviewModel " + id + " deleted");
+      System.out.println("Review " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteReviewById() failed: " + e.getMessage());
     }

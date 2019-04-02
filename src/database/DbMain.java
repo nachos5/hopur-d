@@ -15,22 +15,18 @@ public class DbMain {
   private static String db_password;
   static Connection conn = null; // aðgengilegt í pakkanum
 
-  public static void init() {
+  public static void init(Boolean dev) {
     local(); // production() hér ef heroku database
     connect();
-    dev(); // commenta út ef það á ekki að droppa núverandi schema eða runna testum
+    if (dev) {
+      dev(); // commenta út ef það á ekki að droppa núverandi schema eða runna testum
+    }
   }
 
   /**
    * sér um að "resetta" databaseið, þarf bara í development
    */
   private static void dev() {
-    // keyrum skemað til að fokka í með testunum
-    Schema.run(db_user);
-    Insert.run();
-    // keyrum test
-    Tests.run();
-    // hreinsum skemað sem við notuðum fyrir testin og búum til uppá nýtt
     Schema.run(db_user);
     Insert.run();
   }

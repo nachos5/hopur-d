@@ -1,6 +1,6 @@
 package database;
 
-import models.UserModel;
+import models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +10,16 @@ import java.util.ArrayList;
 
 public class UserQueries {
 
-  public static void insertUser(UserModel user) {
+  private static User resultSetToUser(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    String username = rs.getString("username");
+    Boolean admin = rs.getBoolean("admin");
+    String email = rs.getString("email");
+    String password = rs.getString("password");
+    return new User(id, username, admin, email, password);
+  }
+
+  public static void insertUser(User user) {
     String sql = "INSERT INTO daytrip.users(username,admin,email,password) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -21,7 +30,7 @@ public class UserQueries {
       pstmt.setString(4, user.getPassword());
       // framkvæmum statementið
       pstmt.executeUpdate();
-      System.out.println("UserModel added to database");
+      System.out.println("User added to database");
     } catch (SQLException e) {
       System.err.println("insertUser() failed:" + e.getMessage());
     }
@@ -33,7 +42,7 @@ public class UserQueries {
    * @param username
    * @return
    */
-  public static UserModel getUser(String username) {
+  public static User getUser(String username) {
     String sql = "SELECT * FROM daytrip.users WHERE username = ?";
 
     try {
@@ -41,35 +50,27 @@ public class UserQueries {
       pstmt.setString(1, username);
 
       ResultSet rs = pstmt.executeQuery();
-      rs.next();
-
-      return new UserModel(
-          rs.getString("username"),
-          rs.getBoolean("admin"),
-          rs.getString("email"),
-          rs.getString("password")
-      );
+      while (rs.next()) {
+        return resultSetToUser(rs);
+      }
     } catch (SQLException e) {
-      System.err.println("getUsers() failed: " + e.getMessage());
+      System.err.println("getUser() failed: " + e.getMessage());
     }
     return null;
   }
 
 
-  public static ArrayList<UserModel> getAllUsers() {
-    ArrayList<UserModel> users = new ArrayList<>();
+  public static ArrayList<User> getAllUsers() {
+    ArrayList<User> users = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.users;";
 
     //connect();
     try (Statement stmt = DbMain.conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
       while(rs.next()) {
-        String username = rs.getString("username");
-        Boolean admin = rs.getBoolean("admin");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
+        User user = resultSetToUser(rs);
         // bætum við notandanum í listann
-        users.add(new UserModel(username, admin, email, password));
+        users.add(user);
       }
     } catch (SQLException e) {
       System.err.println("getAllUsers() failed: " + e.getMessage());
@@ -85,7 +86,7 @@ public class UserQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("UserModel " + id + " deleted");
+      System.out.println("User " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteUserById() failed: " + e.getMessage());
     }

@@ -1,7 +1,7 @@
 package database;
 
-import models.DepartureModel;
-import models.TripModel;
+import models.Departure;
+import models.Trip;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,12 +9,23 @@ import java.util.GregorianCalendar;
 
 public class DepartureQueries {
 
+  private static Departure resultSetToDeparture(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    Trip trip = TripQueries.getTripById(rs.getInt("tripId"));
+    Timestamp timestamp = rs.getTimestamp("dateBegin");
+    GregorianCalendar dateBegin = new GregorianCalendar();
+    dateBegin.setTime(timestamp);
+    Boolean available = rs.getBoolean("available");
+    int bookings = rs.getInt("bookings");
+    return new Departure(id, trip, dateBegin, available, bookings);
+  }
+
   /**
    * setur inn departure í databaseið með prepare-uðu statementi
    *
    * @param departure tilvik af ferð
    */
-  public static void insertDeparture(DepartureModel departure) {
+  public static void insertDeparture(Departure departure) {
     String sql = "INSERT INTO daytrip.departure(tripId,dateBegin,available,bookings) VALUES(?,?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -25,7 +36,7 @@ public class DepartureQueries {
       pstmt.setInt(4, departure.getBookings());
 
       pstmt.executeUpdate();
-      System.out.println("DepartureModel added to database");
+      System.out.println("Departure added to database");
     } catch (SQLException e) {
       System.err.println("insertDeparture() failed: " + e.getMessage());
     }
@@ -34,26 +45,17 @@ public class DepartureQueries {
   /**
    * @return array listi með öllum departures úr databaseinu
    */
-  public static ArrayList<DepartureModel> getAllDepartures() {
-    ArrayList<DepartureModel> departures = new ArrayList<>();
+  public static ArrayList<Departure> getAllDepartures() {
+    ArrayList<Departure> departures = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.departure;";
 
     try (Statement stmt = DbMain.conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        TripModel trip = TripQueries.getTripById(rs.getInt("tripId"));
-        Timestamp timestamp = rs.getTimestamp("dateBegin");
-        GregorianCalendar dateBegin = new GregorianCalendar();
-        dateBegin.setTime(timestamp);
-        Boolean available = rs.getBoolean("available");
-        int bookings = rs.getInt("bookings");
-
+        Departure departure = resultSetToDeparture(rs);
         // bætum við ferðinni í listann
-        departures.add(
-            new DepartureModel(id, trip, dateBegin, available, bookings)
-        );
+        departures.add(departure);
       }
     } catch (SQLException e) {
       System.err.println("getAllDepartures() failed: " + e.getMessage());
@@ -62,7 +64,27 @@ public class DepartureQueries {
     return departures;
   }
 
-  public static DepartureModel getDepartureById(int depId) {
+  public static ArrayList<Departure> getAllTripDepartures(int tripId) {
+    ArrayList<Departure> departures = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.departure WHERE tripId=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setInt(1, tripId);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Departure departure = resultSetToDeparture(rs);
+        // bætum við ferðinni í listann
+        departures.add(departure);
+      }
+    } catch (SQLException e) {
+      System.err.println("getAllDepartures() failed: " + e.getMessage());
+    }
+
+    return departures;
+  }
+
+  public static Departure getDepartureById(int depId) {
     String sql = "SELECT * FROM daytrip.departure where id=?;";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
@@ -70,15 +92,7 @@ public class DepartureQueries {
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        TripModel trip = TripQueries.getTripById(rs.getInt("tripId"));
-        Timestamp timestamp = rs.getTimestamp("dateBegin");
-        GregorianCalendar dateBegin = new GregorianCalendar();
-        dateBegin.setTime(timestamp);
-        Boolean available = rs.getBoolean("available");
-        int bookings = rs.getInt("bookings");
-
-        return new DepartureModel(id, trip, dateBegin, available, bookings);
+        return resultSetToDeparture(rs);
       }
     } catch (SQLException e) {
       System.err.println("getDepartureById() failed: " + e.getMessage());
@@ -93,7 +107,7 @@ public class DepartureQueries {
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
-      System.out.println("DepartureModel " + id + " deleted");
+      System.out.println("Departure " + id + " deleted");
     } catch (SQLException e) {
       System.err.println("deleteDepartureById() failed: " + e.getMessage());
     }
