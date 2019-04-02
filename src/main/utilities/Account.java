@@ -20,6 +20,10 @@ public class Account {
         return currentUser;
     }
 
+    public static Boolean isLoggedIn() {
+        return currentUser != noUser;
+    }
+
     public static ObservableStringValue getCurrentUsername() {
         return currentUsername;
     }
@@ -27,12 +31,8 @@ public class Account {
     public static void login(String username, String password) {
         User user = UserQueries.getUser(username);
 
-        System.out.println("user = " + user);
-        if (user == null) {
-            currentUser = noUser;
-            currentUsername.set("");
-        }
-        else if (Utils.checkPassword(password, user.getPassword())) {
+        if (user == null) return;
+        if (Utils.checkPassword(password, user.getPassword())) {
             currentUser = user;
             currentUsername.set(user.getUsername());
         }

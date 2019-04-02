@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import main.gui.MainMenuBar;
 import main.utilities.Account;
+import main.utilities.Language;
 import main.utilities.UTF8Control;
 
 import java.io.IOException;
@@ -49,8 +50,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, 500, 300);
 
         // Set the scene to the stage
-        //stage.titleProperty().bind(Language.createStringBinding("Main.title"));
-        stage.titleProperty().bind(Account.getCurrentUsername());
+        stage.titleProperty().bind(Language.createStringBinding("Main.title"));
         stage.setScene(scene);
 
         // Stage sizes

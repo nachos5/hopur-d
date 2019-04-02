@@ -5,30 +5,36 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import main.utilities.Account;
 import main.utilities.Language;
 
 public class MainMenuBar extends AnchorPane {
 
-    private VBox vb;
-    private MenuBar mb;
+    private HBox menuBars;
+    private MenuBar leftMenuBar;
+    private MenuBar rightMenuBar;
+
+    private MenuItem login;
 
     public MainMenuBar() {
-        mb = new MenuBar();
-        vb = new VBox(mb);
+        leftMenuBar = new MenuBar();
+        rightMenuBar = new MenuBar();
         setup();
+
+        HBox.setHgrow(leftMenuBar, Priority.ALWAYS);
+        menuBars = new HBox(leftMenuBar, rightMenuBar);
     }
 
-    public VBox getMainMenuBar() {
-        return vb;
+    public HBox getMainMenuBar() {
+        return menuBars;
     }
 
     private void setup() {
 
         // File -> Login, Quit
         Menu file = new Menu();
-        MenuItem login = new MenuItem("Login");
+        login = new MenuItem("Login");
         MenuItem quit = new MenuItem("Quit");
 
         // Text properties
@@ -70,12 +76,36 @@ public class MainMenuBar extends AnchorPane {
         // Add menu language to menu settings
         settings.getItems().add(language);
 
-        mb.getMenus().add(file);
-        mb.getMenus().add(settings);
+        // Add menus to left menubar
+        leftMenuBar.getMenus().add(file);
+        leftMenuBar.getMenus().add(settings);
+
+        // Right menubar
+
+        // User label
+        Menu user = new Menu();
+        user.textProperty().bind(Account.getCurrentUsername());
+
+        // Add menu to right menubar
+        rightMenuBar.getMenus().add(user);
     }
 
     private void loginHandler(ActionEvent event) {
-        LoginDialog l = new LoginDialog();
+        // Logout logic
+        if (Account.isLoggedIn()) {
+            Account.logout();
+            login.textProperty().bind(Language.createStringBinding("MenuBar.login"));
+        }
+        // Login logic
+        else {
+            LoginDialog loginDialog = new LoginDialog();
+            loginDialog.start();
+
+            // If login succeeded change to logout
+            if (Account.isLoggedIn()) {
+                login.textProperty().bind(Language.createStringBinding("MenuBar.logout"));
+            }
+        }
     }
 
     private void languageHandler(ActionEvent event) {
