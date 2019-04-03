@@ -59,6 +59,23 @@ public class UserQueries {
     return null;
   }
 
+  public static User getUserById(int id) {
+    String sql = "SELECT * FROM daytrip.users WHERE id = ?";
+
+    try {
+      PreparedStatement pstmt = DbMain.conn.prepareStatement(sql);
+      pstmt.setInt(1, id);
+
+      ResultSet rs = pstmt.executeQuery();
+      while (rs.next()) {
+        return resultSetToUser(rs);
+      }
+    } catch (SQLException e) {
+      System.err.println("getUserById() failed: " + e.getMessage());
+    }
+    return null;
+  }
+
 
   public static ArrayList<User> getAllUsers() {
     ArrayList<User> users = new ArrayList<>();

@@ -14,20 +14,18 @@ public class CompanyQueries {
   private static Company resultSetToCompany(ResultSet rs) throws SQLException {
     int id = rs.getInt("id");
     String name = rs.getString("name");
-    double rating = rs.getDouble("rating");
     String description = rs.getString("description");
     ArrayList<Trip> trips = TripQueries.getTripsByCompanyId(id);
-    return new Company(id, name, rating, description, trips);
+    return new Company(id, name, description, trips);
   }
 
   public static void insertCompany(Company company) {
-    String sql = "INSERT INTO daytrip.company(name,rating,description) VALUES (?,?,?);";
+    String sql = "INSERT INTO daytrip.company(name,description) VALUES (?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       // Set parameters
       pstmt.setString(1, company.getName());
-      pstmt.setDouble(2, company.getRating());
-      pstmt.setString(3, company.getDescription());
+      pstmt.setString(2, company.getDescription());
 
       pstmt.executeUpdate();
       System.out.println("Company added to database");

@@ -23,21 +23,20 @@ public class Schema {
 
     tables.add("CREATE TABLE daytrip.users(" +
         "id SERIAL PRIMARY KEY," +
-        "username VARCHAR(32) UNIQUE," +
+        "username VARCHAR(64) UNIQUE," +
         "admin BOOLEAN," +
-        "email VARCHAR(32) UNIQUE," +
+        "email VARCHAR(64) UNIQUE," +
         "password VARCHAR(128) UNIQUE" +
         ");");
     tables.add("CREATE TABLE daytrip.company(" +
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(49) UNIQUE," +
-        "rating NUMERIC(2,1)," +
+        "name VARCHAR(64)," +
         "description TEXT" +
         ");");
     tables.add("CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(32)," +
-        "category VARCHAR(32)," +
+        "name VARCHAR(64)," +
+        "category VARCHAR(64)," +
         "price INT," +
         "duration INT," +
         "groupSize INT," +
@@ -60,7 +59,7 @@ public class Schema {
         ");");
     tables.add("CREATE TABLE daytrip.review(" +
         "id SERIAL PRIMARY KEY," +
-        "title VARCHAR(49)," +
+        "title VARCHAR(64)," +
         "text VARCHAR(999)," +
         "rating NUMERIC(2,1)," +
         "isPublic BOOLEAN," + // public er reserved í java
