@@ -1,5 +1,6 @@
 package database;
 
+import models.Company;
 import models.Review;
 import models.Trip;
 
@@ -139,6 +140,28 @@ public class TripQueries {
       System.err.println("getTripsByCompanyId() failed: " + e.getMessage());
     }
     return trips;
+  }
+
+  /**
+   * Gets a trip from the database by name
+   * @param tripName
+   * @return
+   */
+  public static Trip getTripByName(String tripName) {
+    String sql = "SELECT * FROM daytrip.trip where name=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, tripName);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        return resultSetToTrip(rs, false);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompanyByName() failed: " + e.getMessage());
+    }
+
+    return null;
   }
 
   /**
