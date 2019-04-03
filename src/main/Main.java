@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import main.gui.MainMenuBar;
 import main.utilities.Account;
+import main.utilities.Language;
 import main.utilities.UTF8Control;
 
 import java.io.IOException;
@@ -46,11 +47,11 @@ public class Main extends Application {
         root.setCenter(myMenu);
 
         // Create a new scene with root
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 800, 400);
 
         // Set the scene to the stage
-        //stage.titleProperty().bind(Language.createStringBinding("Main.title"));
-        stage.titleProperty().bind(Account.getCurrentUsername());
+        stage.titleProperty().bind(Language.createStringBinding("Main.title"));
+        stage.setResizable(false);
         stage.setScene(scene);
 
         // Stage sizes

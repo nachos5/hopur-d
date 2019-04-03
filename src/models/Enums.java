@@ -1,5 +1,7 @@
 package models;
 
+import java.util.ArrayList;
+
 /**
  * Enums til að staðfesta að ákveðin gögn sem fara í database-ið séu rétt
  */
