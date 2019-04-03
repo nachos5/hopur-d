@@ -1,19 +1,23 @@
 package main.controllers;
 
+import database.CompanyQueries;
+import database.TripQueries;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import main.utilities.Language;
+import models.Company;
 import models.Enums;
 import models.Trip;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class NewTripController implements Initializable {
@@ -24,64 +28,57 @@ public class NewTripController implements Initializable {
     TextField nameTextField;
 
     @FXML
-    Label categoryLabel;
-    @FXML
     ComboBox categoryComboBox;
 
     @FXML
     Label priceLabel;
     @FXML
-    TextField priceTextField;
+    Label priceLabelValue;
+    @FXML
+    Slider priceSlider;
 
     @FXML
     Label durationLabel;
     @FXML
-    TextField durationTextField;
+    Label durationLabelValue;
+    @FXML
+    Slider durationSlider;
 
     @FXML
     Label groupSizeLabel;
     @FXML
-    TextField groupSizeTextField;
+    Label groupSizeLabelValue;
+    @FXML
+    Slider groupSizeSlider;
 
     @FXML
-    Label countryLabel;
-    @FXML
-    TextField countryTextField;
+    ComboBox countryComboBox;
 
     @FXML
-    Label cityLabel;
-    @FXML
-    TextField cityTextField;
+    ComboBox cityComboBox;
 
     @FXML
-    Label accessabilityLabel;
-    @FXML
-    TextField accessabilityTextField;
+    ComboBox accessabilityComboBox;
 
     @FXML
-    Label languageLabel;
-    @FXML
-    TextField languageTextField;
+    ComboBox languageComboBox;
 
     @FXML
-    Label sustainableLabel;
+    HBox sustainableHBox;
     @FXML
-    TextField sustainableTextField;
+    ToggleGroup sustainableToggleGroup;
+    @FXML
+    RadioButton sustainableTrue;
+    @FXML
+    RadioButton sustainableFalse;
 
     @FXML
     Label descriptionLabel;
     @FXML
-    TextField descriptionTextField;
+    TextArea descriptionTextArea;
 
     @FXML
-    Label companyLabel;
-    @FXML
-    TextField companyTextField;
-
-    @FXML
-    Label reviewsLabel;
-    @FXML
-    TextField reviewsTextField;
+    ComboBox companyComboBox;
 
     @FXML
     Button cancelButton;
@@ -94,23 +91,109 @@ public class NewTripController implements Initializable {
 
         // Labels
         nameLabel.textProperty().bind(Language.createStringBinding("NewTripController.name"));
-        categoryLabel.textProperty().bind(Language.createStringBinding("NewTripController.category"));
-        priceLabel.textProperty().bind(Language.createStringBinding("NewTripController.price"));
-        durationLabel.textProperty().bind(Language.createStringBinding("NewTripController.duration"));
-        groupSizeLabel.textProperty().bind(Language.createStringBinding("NewTripController.groupSize"));
-        countryLabel.textProperty().bind(Language.createStringBinding("NewTripController.country"));
-        cityLabel.textProperty().bind(Language.createStringBinding("NewTripController.city"));
-        accessabilityLabel.textProperty().bind(Language.createStringBinding("NewTripController.accessability"));
-        languageLabel.textProperty().bind(Language.createStringBinding("NewTripController.language"));
-        sustainableLabel.textProperty().bind(Language.createStringBinding("NewTripController.sustainable"));
         descriptionLabel.textProperty().bind(Language.createStringBinding("NewTripController.description"));
-        companyLabel.textProperty().bind(Language.createStringBinding("NewTripController.company"));
-        reviewsLabel.textProperty().bind(Language.createStringBinding("NewTripController.reviews"));
 
-        // Button
+        // Sliders
+        priceLabel.textProperty().bind(Language.createStringBinding("NewTripController.price"));
+        priceLabelValue.setText(String.format("%.0f", priceSlider.getValue()));
+
+        durationLabel.textProperty().bind(Language.createStringBinding("NewTripController.duration"));
+        durationLabelValue.setText(String.format("%.0f", durationSlider.getValue()));
+
+        groupSizeLabel.textProperty().bind(Language.createStringBinding("NewTripController.groupSize"));
+        groupSizeLabelValue.setText(String.format("%.0f", groupSizeSlider.getValue()) + "");
+
+        // Buttons
         cancelButton.textProperty().bind(Language.createStringBinding("NewTripController.cancelButton"));
         okButton.textProperty().bind(Language.createStringBinding("NewTripController.okButton"));
 
+        // Comboboxes
+        categoryComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.category")); // Enum
+        countryComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.country")); // Enum
+        cityComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.city")); // Enum
+        accessabilityComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.accessability")); // Enum
+        languageComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.language")); // Enum
+        companyComboBox.promptTextProperty().bind(Language.createStringBinding("NewTripController.company")); // Company
+
+        // Radiobuttons
+        sustainableTrue.textProperty().bind(Language.createStringBinding("NewTripController.sustainableTrue")); // Boolean
+        sustainableFalse.textProperty().bind(Language.createStringBinding("NewTripController.sustainableFalse")); // Boolean
+
+        populateComboBoxes();
+        setupSliders();
+        setupBindings();
+
+    }
+
+    private void setupSliders() {
+        // Price - update label
+        priceSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+            priceLabelValue.setText(String.format("%.0f", new_val));
+        });
+
+        // Duration - update label
+        durationSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+            durationLabelValue.setText(String.format("%.0f", new_val));
+        });
+
+        // GroupSize - update label
+        groupSizeSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+            groupSizeLabelValue.setText(String.format("%.0f", new_val));
+        });
+    }
+
+    private void populateComboBoxes() {
+        // Country
+        for (Enum country : Enums.Country.values()) {
+            countryComboBox.getItems().add(country);
+        }
+
+        // Language
+        for (Enum language : Enums.Language.values()) {
+            languageComboBox.getItems().add(language);
+        }
+
+        // Company
+        ArrayList<Company> companyList = CompanyQueries.getAllCompanies();
+        Iterator<Company> companyIterator = companyList.iterator();
+
+        while (companyIterator.hasNext()) {
+            companyComboBox.getItems().add(companyIterator.next().getName());
+        }
+
+        // Category
+        for (Enum category : Enums.Category.values()) {
+            categoryComboBox.getItems().add(category);
+        }
+
+        // Accessability
+        for (Enum accessability : Enums.Accessability.values()) {
+            accessabilityComboBox.getItems().add(accessability);
+        }
+
+        // City
+        for (Enum city : Enums.City.values()) {
+            cityComboBox.getItems().add(city);
+        }
+    }
+
+    private void setupBindings() {
+        // Require all fields to have a value before submition
+        BooleanBinding disableButton = nameTextField.textProperty().isEmpty()
+                .or(categoryComboBox.valueProperty().isNull()
+                .or(priceSlider.valueProperty().isEqualTo(0)
+                .or(durationSlider.valueProperty().isEqualTo(0)
+                .or(groupSizeSlider.valueProperty().isEqualTo(0)
+                .or(countryComboBox.valueProperty().isNull()
+                .or(cityComboBox.valueProperty().isNull()
+                .or(accessabilityComboBox.valueProperty().isNull()
+                .or(languageComboBox.valueProperty().isNull()
+                .or(sustainableToggleGroup.selectedToggleProperty().isNull()
+                .or(descriptionTextArea.textProperty().isEmpty()
+                .or(companyComboBox.valueProperty().isNull()
+                )))))))))));
+
+        okButton.disableProperty().bind(disableButton);
     }
 
     public void cancelHandler(ActionEvent event) {
@@ -118,20 +201,34 @@ public class NewTripController implements Initializable {
     }
 
     public void okHandler(ActionEvent event) {
-       /* Trip newTrip = new Trip(
-                nameTextField.getText().trim(),                                 // String
-                categoryTextField.getText().trim(),                             // Enum
-                Integer.parseInt(priceTextField.getText().trim()),              // int
-                Integer.parseInt(durationTextField.getText().trim()),           // int
-                Integer.parseInt(groupSizeTextField.getText().trim()),          // int
-                countryTextField.getText().trim(),                              // Enum
-                cityTextField.getText().trim(),             // Enum
-                accessabilityTextField.getText().trim(),    // Enum
-                languageTextField.getText().trim(),         // Enum
-                sustainableTextField.getText().trim(),      // Boolean
-                descriptionTextField.getText().trim(),      // String
-                companyTextField.getText().trim(),          // Company
-        );*/
+        System.out.println(categoryComboBox.getValue());
+        // Get selected radiobutton
+        RadioButton selectedRadioButton = (RadioButton) sustainableToggleGroup.getSelectedToggle();
+
+        // Translate radiobutton to boolean
+        Boolean sustainable = false;
+        if (selectedRadioButton.getId() == sustainableTrue.getId()) sustainable = true;
+
+       Trip newTrip = new Trip(
+                nameTextField.getText().trim(),                                         // String
+                (Enums.Category) categoryComboBox.getValue(),                           // Enum
+                (int) priceSlider.getValue(),                                           // int
+                (int) durationSlider.getValue(),                                        // int
+                (int) groupSizeSlider.getValue(),                                       // int
+                (Enums.Country) countryComboBox.getValue(),                             // Enum
+                (Enums.City) cityComboBox.getValue(),                                   // Enum
+                (Enums.Accessability) accessabilityComboBox.getValue(),                 // Enum
+                (Enums.Language) languageComboBox.getValue(),                           // Enum
+                sustainable,                                                            // Boolean
+                descriptionTextArea.getText().trim(),                                   // String
+                CompanyQueries.getCompanyByName(companyComboBox.getValue().toString())  // Company
+       );
+
+       // Insert newTrip into database
+       TripQueries.insertTrip(newTrip);
+
+       // Close dialog
+       closeStage(event);
     }
 
     private void closeStage(ActionEvent event) {

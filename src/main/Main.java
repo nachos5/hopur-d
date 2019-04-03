@@ -51,6 +51,7 @@ public class Main extends Application {
 
         // Set the scene to the stage
         stage.titleProperty().bind(Language.createStringBinding("Main.title"));
+        stage.setResizable(false);
         stage.setScene(scene);
 
         // Stage sizes

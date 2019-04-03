@@ -146,9 +146,11 @@ public class MainMenuBar extends AnchorPane {
         //Main.getRoot().setCenter(newTrip);
 
         // Set dialog
-        Scene scene = new Scene(newTrip, 400, 600);
+        Scene scene = new Scene(newTrip, 550, 750);
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.titleProperty().bind(Language.createStringBinding("NewTripController.title"));
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.showAndWait();
     }

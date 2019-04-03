@@ -9,6 +9,12 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Slider?>
 <VBox alignment="center"
       fx:controller="main.controllers.NewTripController"
       xmlns="http://javafx.com/javafx"
@@ -18,48 +24,82 @@
     <GridPane hgap="10" vgap="10">
 
         <Label fx:id="nameLabel" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="nameTextField" prefWidth="250" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <TextField fx:id="nameTextField" prefWidth="250" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
 
-        <Label fx:id="categoryLabel" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="categoryComboBox" promptText="choose" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
 
-        <Label fx:id="priceLabel" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <TextField fx:id="priceTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <HBox GridPane.rowIndex="3" GridPane.columnIndex="0">
+            <Label fx:id="priceLabelValue"/>
+            <Label fx:id="priceLabel"/>
+        </HBox>
+        <Slider fx:id="priceSlider"
+                majorTickUnit="5000"
+                min="0"
+                max="100000"
+                minorTickCount="0"
+                showTickLabels="true"
+                showTickMarks="true"
+                snapToTicks="true"
+                value="0"
+                GridPane.rowIndex="4" GridPane.columnIndex="0"/>
 
-        <Label fx:id="durationLabel" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <TextField fx:id="durationTextField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <HBox GridPane.rowIndex="5" GridPane.columnIndex="0">
+            <Label fx:id="durationLabelValue"/>
+            <Label fx:id="durationLabel"/>
+        </HBox>
+        <Slider fx:id="durationSlider"
+                majorTickUnit="1"
+                min="0"
+                max="24"
+                minorTickCount="0"
+                showTickLabels="true"
+                showTickMarks="true"
+                snapToTicks="true"
+                value="0"
+                GridPane.rowIndex="6" GridPane.columnIndex="0"/>
 
-        <Label fx:id="groupSizeLabel" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <TextField fx:id="groupSizeTextField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <HBox GridPane.rowIndex="7" GridPane.columnIndex="0">
+            <Label fx:id="groupSizeLabel"/>
+            <Label fx:id="groupSizeLabelValue"/>
+        </HBox>
+        <Slider fx:id="groupSizeSlider"
+                majorTickUnit="1"
+                min="0"
+                max="10"
+                minorTickCount="0"
+                showTickLabels="true"
+                showTickMarks="true"
+                snapToTicks="true"
+                value="0"
+                GridPane.rowIndex="8" GridPane.columnIndex="0"/>
 
-        <Label fx:id="countryLabel" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-        <TextField fx:id="countryTextField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="countryComboBox" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
 
-        <Label fx:id="cityLabel" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-        <TextField fx:id="cityTextField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="cityComboBox" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
 
-        <Label fx:id="accessabilityLabel" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-        <TextField fx:id="accessabilityTextField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="accessabilityComboBox" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
 
-        <Label fx:id="languageLabel" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-        <TextField fx:id="languageTextField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="languageComboBox" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
 
-        <Label fx:id="sustainableLabel" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
-        <TextField fx:id="sustainableTextField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <HBox fx:id="sustainableHBox" GridPane.rowIndex="13" GridPane.columnIndex="0">
+            <fx:define>
+                <ToggleGroup fx:id="sustainableToggleGroup"/>
+            </fx:define>
+            <children>
+                <RadioButton fx:id="sustainableTrue" toggleGroup="$sustainableToggleGroup"/>
+                <RadioButton fx:id="sustainableFalse" toggleGroup="$sustainableToggleGroup"/>
+            </children>
+        </HBox>
 
-        <Label fx:id="descriptionLabel" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
-        <TextField fx:id="descriptionTextField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="companyComboBox" GridPane.rowIndex="14" GridPane.columnIndex="0"/>
 
-        <Label fx:id="companyLabel" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
-        <TextField fx:id="companyTextField" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
-
-        <Label fx:id="reviewsLabel" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
-        <TextField fx:id="reviewsTextField" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+        <Label fx:id="descriptionLabel" GridPane.rowIndex="15" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionTextArea" wrapText="true" GridPane.rowIndex="16" GridPane.columnIndex="0"/>
 
     </GridPane>
     <HBox alignment="CENTER_RIGHT" spacing="15">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-        <Button fx:id="cancelButton" onAction="#cancelHandler" prefWidth="85" prefHeight="25" defaultButton="true" mnemonicParsing="false" text="Login" />
-        <Button fx:id="okButton" onAction="#okHandler" prefWidth="85" prefHeight="25" defaultButton="true" mnemonicParsing="false" text="Login" />
+        <Button fx:id="cancelButton" onAction="#cancelHandler" prefWidth="85" prefHeight="25" defaultButton="true" mnemonicParsing="false"/>
+        <Button fx:id="okButton" onAction="#okHandler" prefWidth="85" prefHeight="25" defaultButton="true" mnemonicParsing="false"/>
     </HBox>
 </VBox>
