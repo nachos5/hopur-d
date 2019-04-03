@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import main.controllers.MainController;
 import main.gui.MainMenuBar;
 import main.utilities.Account;
 import main.utilities.Language;
@@ -39,10 +40,13 @@ public class Main extends Application {
         ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
 
         // Main
-        Parent myMenu = FXMLLoader.load(getClass().getResource("fxml/Main.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/Main.fxml"), bundle);
+        Parent myMenu = loader.load();
+
+        MainController mainController = (MainController) loader.getController();
 
         // Assign the FXML to the BorderPane(root)
-        MainMenuBar mb = new MainMenuBar();
+        MainMenuBar mb = new MainMenuBar(mainController);
         root.setTop(mb.getMainMenuBar());
         root.setCenter(myMenu);
 
@@ -65,7 +69,7 @@ public class Main extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DbMain.init(true);
+        DbMain.init(false);
         launch(args);
     }
 

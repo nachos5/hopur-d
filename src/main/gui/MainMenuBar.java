@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.controllers.EditTripController;
+import main.controllers.MainController;
 import main.utilities.Account;
 import main.utilities.Language;
 import main.utilities.UTF8Control;
@@ -23,10 +25,12 @@ public class MainMenuBar extends AnchorPane {
     private HBox menuBars;
     private MenuBar leftMenuBar;
     private MenuBar rightMenuBar;
+    private MainController mainController;
 
     private MenuItem login;
 
-    public MainMenuBar() {
+    public MainMenuBar(MainController mainController) {
+        this.mainController = mainController;
         leftMenuBar = new MenuBar();
         rightMenuBar = new MenuBar();
         setup();
@@ -115,8 +119,29 @@ public class MainMenuBar extends AnchorPane {
         // Add menu language to menu settings
         settings.getItems().add(language);
 
+        // Edit -> Trip
+        Menu edit = new Menu();
+        MenuItem editTrip = new MenuItem();
+
+        // Text properties
+        edit.textProperty().bind(Language.createStringBinding("MenuBar.edit"));
+        editTrip.textProperty().bind(Language.createStringBinding("MenuBar.editTrip"));
+
+        // Item events
+        editTrip.setOnAction((e) -> {
+            try {
+                editTripHandler(e);
+            } catch (IOException err) {
+                System.err.println("Edit Trip error: " + err);
+            }
+        });
+
+        // Add items to edit
+        edit.getItems().add(editTrip);
+
         // Add menus to left menubar
         leftMenuBar.getMenus().add(file);
+        leftMenuBar.getMenus().add(edit);
         leftMenuBar.getMenus().add(settings);
 
         // Right menubar
@@ -145,6 +170,24 @@ public class MainMenuBar extends AnchorPane {
                 login.textProperty().bind(Language.createStringBinding("MenuBar.logout"));
             }
         }
+    }
+
+    private void editTripHandler(ActionEvent event) throws IOException {
+        ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/EditTrip.fxml"), bundle);
+        Parent newTrip = loader.load();
+        EditTripController editTripController = loader.getController();
+
+        editTripController.setTrip(mainController.getCurrentTrip());
+
+        // Set dialog
+        Scene scene = new Scene(newTrip, 550, 750);
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.titleProperty().bind(Language.createStringBinding("EditTripController.title"));
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 
     private void languageHandler(ActionEvent event) {

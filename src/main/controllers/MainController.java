@@ -53,6 +53,10 @@ public class MainController implements Initializable {
     //DbMain.close();
   }
 
+  public Trip getCurrentTrip() {
+    return trip_table.getSelectionModel().getSelectedItem();
+  }
+
   /**
    * sækjum array lista af öllum userum úr databaseinu og köstum yfir í observable lista -> filtered lista
    *
