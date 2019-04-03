@@ -63,6 +63,8 @@ public class Insert {
           false, faker.internet().emailAddress(),
           Utils.hashPassword(faker.internet().password())));
     }
+    users.add(new User("user", false,"user@gmail.com", Utils.hashPassword("user")));
+    users.add(new User("testuser2", false, "user2@gmail.com", Utils.hashPassword("bubbi")));
 
     for (User user: users) {
       insertUser(user);
@@ -114,6 +116,9 @@ public class Insert {
           faker.number().randomDouble(1, 0, 5), Math.random() < 0.5));
 
     }
+    reviews.add(new Review(getUser("admin"), getTripById(1), "Vá!", "Frábær ganga!", 5.0, true));
+    reviews.add(new Review(getUser("user"), getTripById(1), "Glatað!", "Ömurleg ganga!", 0.5, true));
+    reviews.add(new Review(getUser("testuser2"), getTripById(2), "Farið til helvítis!", "Ætla að kæra ykkur fyrir ósættanlega framkomu!", 0.0, false));
 
     for (Review review: reviews) {
       insertReview(review);
@@ -129,6 +134,9 @@ public class Insert {
       Departure departure = getDepartureById(faker.number().numberBetween(1, noDepartures));
       bookings.add(new Booking(user, departure, randomEnum(Enums.Status.class)));
     }
+    bookings.add(new Booking(getUser("admin"), getDepartureById(1), Enums.Status.UNPAID));
+    bookings.add(new Booking(getUser("admin"), getDepartureById(2), Enums.Status.PAID));
+    bookings.add(new Booking(getUser("user"), getDepartureById(1), Enums.Status.UNPAID));
 
     for (Booking booking: bookings) {
       insertBooking(booking);

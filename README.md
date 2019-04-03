@@ -15,6 +15,12 @@
 - Guðmundur sér um að merge'a við masterinn (origin master)
 - Til að auðvelda það, þá er gott að uppfæra sitt branch reglulega, eða áður en það er push'að á sitt eigið branch.
 
+## Login
+- user: `admin`
+    - pw: `admin`
+- user: `user`
+    - pw: `user`
+
 ## Folders
 
 **resources:**

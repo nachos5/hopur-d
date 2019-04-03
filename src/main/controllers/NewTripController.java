@@ -10,13 +10,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import main.utilities.Language;
 import models.Company;
 import models.Enums;
 import models.Trip;
-
+import main.utilities.Language;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -154,8 +152,7 @@ public class NewTripController implements Initializable {
         }
 
         // Company
-        ArrayList<Company> companyList = CompanyQueries.getAllCompanies();
-        Iterator<Company> companyIterator = companyList.iterator();
+        Iterator<Company> companyIterator = CompanyQueries.getAllCompanies().iterator();
 
         while (companyIterator.hasNext()) {
             companyComboBox.getItems().add(companyIterator.next().getName());
@@ -201,7 +198,6 @@ public class NewTripController implements Initializable {
     }
 
     public void okHandler(ActionEvent event) {
-        System.out.println(categoryComboBox.getValue());
         // Get selected radiobutton
         RadioButton selectedRadioButton = (RadioButton) sustainableToggleGroup.getSelectedToggle();
 
@@ -209,7 +205,8 @@ public class NewTripController implements Initializable {
         Boolean sustainable = false;
         if (selectedRadioButton.getId() == sustainableTrue.getId()) sustainable = true;
 
-       Trip newTrip = new Trip(
+        // Construct a new trip
+        Trip newTrip = new Trip(
                 nameTextField.getText().trim(),                                         // String
                 (Enums.Category) categoryComboBox.getValue(),                           // Enum
                 (int) priceSlider.getValue(),                                           // int

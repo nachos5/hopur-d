@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import main.utilities.Account;
 import main.utilities.Language;
 import main.utilities.UTF8Control;
-import main.Main;
 
 public class MainMenuBar extends AnchorPane {
 
@@ -47,16 +46,23 @@ public class MainMenuBar extends AnchorPane {
         Menu menuNew = new Menu();
 
         MenuItem trip = new MenuItem();
-        login = new MenuItem("Login");
-        MenuItem quit = new MenuItem("Quit");
+        MenuItem review = new MenuItem();
+        login = new MenuItem();
+        MenuItem quit = new MenuItem();
 
         //Add items to menuNew
         menuNew.getItems().add(trip);
+        menuNew.getItems().add(review);
+
+        // Bindings
+        trip.disableProperty().bind(Account.isAdminObservable());
+        review.disableProperty().bind(Account.isLoggedInObservable());
 
         // Text properties
         file.textProperty().bind(Language.createStringBinding("MenuBar.file"));
         menuNew.textProperty().bind(Language.createStringBinding("MenuBar.new"));
         trip.textProperty().bind(Language.createStringBinding("MenuBar.trip"));
+        review.textProperty().bind(Language.createStringBinding("MenuBar.review"));
         login.textProperty().bind(Language.createStringBinding("MenuBar.login"));
         quit.textProperty().bind(Language.createStringBinding("MenuBar.quit"));
 
@@ -66,6 +72,13 @@ public class MainMenuBar extends AnchorPane {
                 newTripHandler(e);
             } catch(IOException err) {
                 System.err.println("Menubar new -> trip error: " + err);
+            }
+        });
+        review.setOnAction((e) -> {
+            try {
+                newReviewHandler(e);
+            } catch(IOException err) {
+                System.err.println("Menubar new -> review error: " + err);
             }
         });
         login.setOnAction(e -> loginHandler(e));
@@ -78,11 +91,11 @@ public class MainMenuBar extends AnchorPane {
 
 
         // Settings -> Language -> Icelandic, English
-        Menu settings = new Menu("Settings");
-        Menu language = new Menu("Language");
-        MenuItem icelandic = new MenuItem("Icelandic");
+        Menu settings = new Menu();
+        Menu language = new Menu();
+        MenuItem icelandic = new MenuItem();
         icelandic.setId("is");
-        MenuItem english = new MenuItem("English");
+        MenuItem english = new MenuItem();
         english.setId("en");
 
         // Text properties
@@ -143,13 +156,25 @@ public class MainMenuBar extends AnchorPane {
         ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
         Parent newTrip = FXMLLoader.load(getClass().getResource("../fxml/NewTrip.fxml"), bundle);
 
-        //Main.getRoot().setCenter(newTrip);
-
         // Set dialog
         Scene scene = new Scene(newTrip, 550, 750);
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.titleProperty().bind(Language.createStringBinding("NewTripController.title"));
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    private void newReviewHandler(ActionEvent event) throws IOException {
+        ResourceBundle bundle = ResourceBundle.getBundle("languages", new UTF8Control());
+        Parent newReview = FXMLLoader.load(getClass().getResource("../fxml/NewReview.fxml"), bundle);
+
+        // Set dialog
+        Scene scene = new Scene(newReview, 400, 350);
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.titleProperty().bind(Language.createStringBinding("NewReviewController.title"));
         stage.setResizable(false);
         stage.setScene(scene);
         stage.showAndWait();
