@@ -262,7 +262,42 @@ public class TripQueries {
     }
   }
 
-    return null;
+  // möguleg approach: tveir ArrayList, einn fyrir gildin, annar fyrir dálka
+  //                   trip object sem hefur allt nema uppfærða dálka sem null
+  //                   ArrayList með key-value pörum
+  // Pæling með heppilegt return value, id eða name eða öll ferðin?
+  // Hvernig er best að setja saman SET col = ?,... án þess að opna fyrir SQL inj.?
+  /**
+   *
+   * @param id id ferðar sem á að uppfæra
+   * @param columns listi af dálkum sem á að uppfæra
+   * @param values listi af gildum sem á að uppfæra með
+   * @throws SQLException
+   */
+  public static void updateTrip(int id, ArrayList<String> columns, ArrayList<String> values) throws SQLException{
+    if(columns.size() != values.size()) {
+      throw new SQLException("Number of columns does not match number of values");
+    }
+    String colString = "SET ";
+    for(String col :  columns) {
+      colString += col + " = ?,";
+    }
+    // vantar sanitazion
+    colString = colString.substring(0, colString.length()-1);
+
+    String sql = "UPDATE daytrip.trip " + colString + " RETURNING id";
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      int i = 1;
+      for(String value : values) {
+        pstmt.setObject(i++, value);
+      }
+
+      pstmt.executeQuery();
+
+    } catch (SQLException e) {
+      System.err.println("getTripsBySearchString() failed" + e.getMessage());
+    }
+
   }
 
   /**
