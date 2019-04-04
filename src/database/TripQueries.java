@@ -1,6 +1,5 @@
 package database;
 
-import models.Company;
 import models.Review;
 import models.Trip;
 
@@ -36,10 +35,10 @@ public class TripQueries {
 
     if (includeCompany) {
       return new Trip(id, name, category, price, duration, groupSize, country, city, accessability, language,
-          sustainability, description, CompanyQueries.getCompanyById(companyId), reviews);
+              sustainability, description, CompanyQueries.getCompanyById(companyId), reviews);
     } else {
       return new Trip(id, name, category, price, duration, groupSize, country, city, accessability, language,
-          sustainability, description, reviews);
+              sustainability, description, reviews);
     }
   }
 
@@ -50,7 +49,7 @@ public class TripQueries {
    */
   public static void insertTrip(Trip trip) {
     String sql = "INSERT INTO daytrip.trip(name,category,price,duration,groupSize,country,city,accessability," +
-        "language,sustainable,description,companyId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+            "language,sustainable,description,companyId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       // Set parameters
@@ -72,6 +71,7 @@ public class TripQueries {
     } catch (SQLException e) {
       System.err.println("insertTrip() failed: " + e.getMessage());
     }
+    //close();
   }
 
   /**
@@ -143,23 +143,124 @@ public class TripQueries {
   }
 
   /**
-   * Gets a trip from the database by name
-   * @param tripName
-   * @return
+   * Sækir lista af ferðum úr gagnagrunni sem passa við leitarstrenginn,
+   * þ.e. leitarstrengurinn passar við nafn, lýsingu eða flokk ferðar
+   * (Postgres styður bara ensku)
+   * @param search leitarstrengurinn
+   * @return ArrayListi með þeim ferðum sem passa við strenginn
    */
-  public static Trip getTripByName(String tripName) {
-    String sql = "SELECT * FROM daytrip.trip where name=?;";
-
+  public static ArrayList<Trip> getTripsBySearchString(String search) {
+    ArrayList<Trip> trips =  new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.trip WHERE" +
+            "to_tsvector('english', name) @@ to_tsquery('english', ?)" +
+            "OR to_tsvector('english', description) @@ plainto_tsquery('english', ?)" +
+            "OR to_tsvector('english', category) @@ plainto_tsquery('english', ?)";
+    // Leita eftir fyrirtæki líka?
+    // Örlítið vesen þar sem við höfum bara id í trip
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
-      pstmt.setString(1, tripName);
+      pstmt.setString(1, search);
+      pstmt.setString(2, search);
+      pstmt.setString(3, search);
+
       ResultSet rs = pstmt.executeQuery();
 
-      while (rs.next()) {
-        return resultSetToTrip(rs, false);
+      while(rs.next()) {
+        trips.add(resultSetToTrip(rs, false));
       }
     } catch (SQLException e) {
-      System.err.println("getCompanyByName() failed: " + e.getMessage());
+      System.err.println("getTripsBySearchString() failed" + e.getMessage());
     }
+
+    return trips;
+  }
+
+  /**
+   * Sækir lista af ferðum úr gagnagrunni sem eru á verðbilinu
+   * @param maxPrice hámarks verð
+   * @param minPrice lágmarks verð
+   * @return
+   */
+  public static ArrayList<Trip> getTripPriceRange(int maxPrice, int minPrice) {
+    ArrayList<Trip> trips = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.trip" +
+            "WHERE price > ? AND price < ?";
+
+    try(PreparedStatement pstmt = DbMain.conn.prepareStatement((sql))) {
+      pstmt.setInt(1, maxPrice);
+      pstmt.setInt(2, minPrice);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      while(rs.next()) {
+        trips.add(resultSetToTrip(rs, false));
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripsBySearchString() failed" + e.getMessage());
+    }
+    return trips;
+  }
+
+  /**
+   * Sækir lista af ferðum sem passa við leitarstreng og eru á verðbilinu
+   * @param maxPrice hámarks verð
+   * @param minPrice lágmarks verð
+   * @param search leitarstrengur
+   * @return
+   */
+  public static ArrayList<Trip> getTripPriceSearch(int maxPrice, int minPrice, String search) {
+    ArrayList<Trip> trips =  new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.trip WHERE" +
+            "to_tsvector('english', name) @@ to_tsquery('english', ?)" +
+            "OR to_tsvector('english', description) @@ plainto_tsquery('english', ?)" +
+            "OR to_tsvector('english', category) @@ plainto_tsquery('english', ?)" +
+            "AND price > ?" +
+            "AND price < ?";
+    // Leita eftir fyrirtæki líka?
+    // Örlítið vesen þar sem við höfum bara id í trip
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, search);
+      pstmt.setString(2, search);
+      pstmt.setString(3, search);
+      pstmt.setInt(1, maxPrice);
+      pstmt.setInt(2, minPrice);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      while(rs.next()) {
+        trips.add(resultSetToTrip(rs, false));
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripsBySearchString() failed" + e.getMessage());
+    }
+
+    return trips;
+  }
+
+  public static void updateTrip(Trip trip) {
+    String sql = "UPDATE daytrip.trip" +
+            "SET " +
+            "name = ?, price = ?, category = ?, " +
+            "duration = ?, groupSize = ?, country = ?, " +
+            "city = ?, accessability = ?, language = ?, " +
+            "description = ?";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, trip.getName());
+      pstmt.setInt(2, trip.getPrice());
+      pstmt.setString(3, trip.getCategory());
+      pstmt.setInt(4, trip.getDuration());
+      pstmt.setInt(5, trip.getGroupSize());
+      pstmt.setString(6, trip.getCountry());
+      pstmt.setString(7, trip.getCity());
+      pstmt.setString(8, trip.getAccessability());
+      pstmt.setString(9, trip.getLanguage());
+      pstmt.setString(10, trip.getDescription());
+      pstmt.executeQuery();
+
+    } catch (SQLException e) {
+      System.err.println("getTripsBySearchString() failed" + e.getMessage());
+    }
+  }
 
     return null;
   }
