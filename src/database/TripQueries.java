@@ -8,14 +8,6 @@ import java.util.ArrayList;
 
 public class TripQueries {
 
-  // ætti heima í DbMain
-  public static ResultSet executeQuery(String sql) throws SQLException {
-    ResultSet rs;
-    PreparedStatement pstmt = DbMain.conn.prepareStatement(sql);
-    rs = pstmt.executeQuery();
-    return rs;
-  }
-
   /**
    * result set to a trip object
    * @param rs the result set
@@ -147,15 +139,30 @@ public class TripQueries {
     return trips;
   }
 
-  public static ArrayList<Trip> getTripsAtTime(Timestamp date) {
+  /**
+   * Skilar lista af ferðum sem eru á ákveðnum tíma
+   * @param startDate lágmarks dagsetning
+   * @param endDate hámarks dagsetning( setja inn null ef það á ekki að vera hámark )
+   * @return Listi af ferðum
+   */
+  public static ArrayList<Trip> getTripsAtTime(Timestamp startDate, Timestamp endDate) {
     ArrayList<Trip> trips = new ArrayList<>();
+    String endClause = endDate != null ? " AND dateBegin <= ?" : "";
+
     String sql = "SELECT * FROM daytrip.trip" +
             "WHERE id IN (" +
             "SELECT * FROM daytrip.departures" +
-            "WHERE dateBegin = ?" +
+            "WHERE dateBegin >= ?" +
+            endClause +
             "AND available = TRUE";
 
-    try (ResultSet rs = executeQuery(sql)) {
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setTimestamp(1, startDate);
+      if (endDate != null) {
+        pstmt.setTimestamp(2, endDate);
+      }
+
+      ResultSet rs = pstmt.executeQuery();
       while (rs.next()) {
         Trip trip = resultSetToTrip(rs, false);
         trips.add(trip);
