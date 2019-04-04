@@ -3,13 +3,18 @@ package database;
 import models.Review;
 import models.Trip;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class TripQueries {
+
+  // ætti heima í DbMain
+  public static ResultSet executeQuery(String sql) throws SQLException {
+    ResultSet rs;
+    PreparedStatement pstmt = DbMain.conn.prepareStatement(sql);
+    rs = pstmt.executeQuery();
+    return rs;
+  }
 
   /**
    * result set to a trip object
@@ -134,6 +139,25 @@ public class TripQueries {
       while (rs.next()) {
         Trip trip = resultSetToTrip(rs, false);
         // bætum við ferðinni í listann
+        trips.add(trip);
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripsByCompanyId() failed: " + e.getMessage());
+    }
+    return trips;
+  }
+
+  public static ArrayList<Trip> getTripsAtTime(Timestamp date) {
+    ArrayList<Trip> trips = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.trip" +
+            "WHERE id IN (" +
+            "SELECT * FROM daytrip.departures" +
+            "WHERE dateBegin = ?" +
+            "AND available = TRUE";
+
+    try (ResultSet rs = executeQuery(sql)) {
+      while (rs.next()) {
+        Trip trip = resultSetToTrip(rs, false);
         trips.add(trip);
       }
     } catch (SQLException e) {
