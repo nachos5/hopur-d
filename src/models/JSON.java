@@ -1,9 +1,5 @@
 package models;
 
-import org.json.JSONObject;
-
-import java.util.Iterator;
-
 public class JSON {
   // enum svo review json lyklar séu pottþétt eins allstaðar
   public enum reviewJSONenum {
