@@ -115,6 +115,22 @@ public class TripQueries {
     return null;
   }
 
+  public static Trip getTripByName(String name) {
+    String sql = "SELECT * FROM daytrip.trip WHERE name=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, name);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        return resultSetToTrip(rs, true);
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripById() failed: " + e.getMessage());
+    }
+    return null;
+  }
+
   /**
    * obtains all trips by a company
    * @param compId the id of the company
@@ -151,10 +167,10 @@ public class TripQueries {
 
     String sql = "SELECT * FROM daytrip.trip" +
             "WHERE id IN (" +
-            "SELECT * FROM daytrip.departures" +
+            "SELECT * FROM daytrip.departure" +
             "WHERE dateBegin >= ?" +
             endClause +
-            "AND available = TRUE";
+            "AND available = TRUE)";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       pstmt.setTimestamp(1, startDate);
