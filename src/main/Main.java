@@ -12,6 +12,7 @@ import main.gui.MainMenuBar;
 import main.utilities.Account;
 import main.utilities.Language;
 import main.utilities.UTF8Control;
+import models.Review;
 
 import java.io.IOException;
 import java.util.*;
@@ -66,6 +67,15 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         DbMain.init(true);
+
+        for (Review review: API.getReviewsByRatingRange(1.0, 3.5, false)) {
+            System.out.println(review.getRating());
+        }
+
+        for (Review review: API.getPublicReviews()) {
+            System.out.println(review.getIsPublic());
+        }
+
         launch(args);
     }
 

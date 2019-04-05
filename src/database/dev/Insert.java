@@ -17,12 +17,12 @@ import static database.UserQueries.*;
 
 public class Insert {
   private static Faker faker = new Faker();
-  private static int noCompanies = 20;
-  private static int noTrips = 200;
-  private static int noDepartures = 1000;
-  private static int noUsers = 20;
-  private static int noReviews = 100;
-  private static int noBookings = 200;
+  private static int noCompanies = 5;
+  private static int noTrips = 20;
+  private static int noDepartures = 40;
+  private static int noUsers = 10;
+  private static int noReviews = 20;
+  private static int noBookings = 20;
 
   private static int delayBetweenInserts = 25;
 
