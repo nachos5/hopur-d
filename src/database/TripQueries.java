@@ -1,5 +1,6 @@
 package database;
 
+import models.Company;
 import models.Review;
 import models.Trip;
 
@@ -117,22 +118,6 @@ public class TripQueries {
     return null;
   }
 
-  public static Trip getTripByName(String name) {
-    String sql = "SELECT * FROM daytrip.trip WHERE name=?;";
-
-    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
-      pstmt.setString(1, name);
-      ResultSet rs = pstmt.executeQuery();
-
-      while (rs.next()) {
-        return resultSetToTrip(rs, true);
-      }
-    } catch (SQLException e) {
-      System.err.println("getTripById() failed: " + e.getMessage());
-    }
-    return null;
-  }
-
   /**
    * obtains all trips by a company
    * @param compId the id of the company
@@ -155,6 +140,28 @@ public class TripQueries {
       System.err.println("getTripsByCompanyId() failed: " + e.getMessage());
     }
     return trips;
+  }
+
+  /**
+   * Gets a trip from the database by name
+   * @param tripName
+   * @return
+   */
+  public static Trip getTripByName(String tripName) {
+    String sql = "SELECT * FROM daytrip.trip where name=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, tripName);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        return resultSetToTrip(rs, false);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompanyByName() failed: " + e.getMessage());
+    }
+
+    return null;
   }
 
   /**
