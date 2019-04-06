@@ -1,4 +1,4 @@
-package database.models;
+package models;
 
 import java.util.GregorianCalendar;
 

@@ -1,7 +1,7 @@
 package database;
 
-import database.models.Company;
-import database.models.Trip;
+import models.Company;
+import models.Trip;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,14 +11,21 @@ import java.util.ArrayList;
 
 public class CompanyQueries {
 
+  private static Company resultSetToCompany(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    String name = rs.getString("name");
+    String description = rs.getString("description");
+    ArrayList<Trip> trips = TripQueries.getTripsByCompanyId(id);
+    return new Company(id, name, description, trips);
+  }
+
   public static void insertCompany(Company company) {
-    String sql = "INSERT INTO daytrip.company(name,rating,description) VALUES (?,?,?);";
+    String sql = "INSERT INTO daytrip.company(name,description) VALUES (?,?);";
 
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
       // Set parameters
       pstmt.setString(1, company.getName());
-      pstmt.setDouble(2, company.getRating());
-      pstmt.setString(3, company.getDescription());
+      pstmt.setString(2, company.getDescription());
 
       pstmt.executeUpdate();
       System.out.println("Company added to database");
@@ -35,19 +42,52 @@ public class CompanyQueries {
          ResultSet rs = stmt.executeQuery(sql)) {
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        double rating = rs.getDouble("rating");
-        String description = rs.getString("description");
-        ArrayList<Trip> trips = TripQueries.getTripsByCompanyId(id);
-
+        Company company = resultSetToCompany(rs);
         // bætum við ferðinni í listann
-        companies.add(
-            new Company(id, name, rating, description, trips)
-        );
+        companies.add(company);
       }
     } catch (SQLException e) {
       System.err.println("getAllCompanies() failed: " + e.getMessage());
+    }
+
+    return companies;
+  }
+
+  public static ArrayList<Company> getCompaniesByNameQuery(String query) {
+    ArrayList<Company> companies = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.company WHERE name LIKE '%' || ? || '%';";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, query);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Company company = resultSetToCompany(rs);
+        // bætum við ferðinni í listann
+        companies.add(company);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompaniesByNameQuery() failed: " + e.getMessage());
+    }
+
+    return companies;
+  }
+
+  public static ArrayList<Company> getCompaniesByDescriptionQuery(String query) {
+    ArrayList<Company> companies = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.company WHERE description LIKE '%' || ? || '%';";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, query);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Company company = resultSetToCompany(rs);
+        // bætum við ferðinni í listann
+        companies.add(company);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompaniesByDescriptionQuery() failed: " + e.getMessage());
     }
 
     return companies;
@@ -61,13 +101,7 @@ public class CompanyQueries {
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        double rating = rs.getDouble("rating");
-        String description = rs.getString("description");
-        ArrayList<Trip> trips = TripQueries.getTripsByCompanyId(id);
-
-        return new Company(id, name, rating, description, trips);
+        return resultSetToCompany(rs);
       }
     } catch (SQLException e) {
       System.err.println("getCompanyById() failed: " + e.getMessage());
@@ -84,13 +118,7 @@ public class CompanyQueries {
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        double rating = rs.getDouble("rating");
-        String description = rs.getString("description");
-        ArrayList<Trip> trips = TripQueries.getTripsByCompanyId(id);
-
-        return new Company(id, name, rating, description, trips);
+        return resultSetToCompany(rs);
       }
     } catch (SQLException e) {
       System.err.println("getCompanyByName() failed: " + e.getMessage());

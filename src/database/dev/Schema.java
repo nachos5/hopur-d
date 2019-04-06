@@ -23,21 +23,22 @@ public class Schema {
 
     tables.add("CREATE TABLE daytrip.users(" +
         "id SERIAL PRIMARY KEY," +
-        "username VARCHAR(32) UNIQUE," +
+        "username VARCHAR(64) UNIQUE," +
         "admin BOOLEAN," +
-        "email VARCHAR(32) UNIQUE," +
-        "password VARCHAR(128) UNIQUE" +
+        "email VARCHAR(64) UNIQUE," +
+        "password VARCHAR(128) UNIQUE," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP" +
         ");");
     tables.add("CREATE TABLE daytrip.company(" +
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(49) UNIQUE," +
-        "rating NUMERIC(2,1)," +
-        "description VARCHAR(999)" +
+        "name VARCHAR(64)," +
+        "description TEXT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP" +
         ");");
     tables.add("CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +
-        "name VARCHAR(32)," +
-        "category VARCHAR(32)," +
+        "name VARCHAR(64)," +
+        "category VARCHAR(64)," +
         "price INT," +
         "duration INT," +
         "groupSize INT," +
@@ -46,9 +47,9 @@ public class Schema {
         "accessability VARCHAR(32)," +
         "language VARCHAR(32)," +
         "sustainable BOOLEAN," +
-        "rating NUMERIC(2,1)," +
-        "description VARCHAR(999)," +
+        "description TEXT," +
         "companyId int," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (companyId) REFERENCES daytrip.company(id)" +
         ");");
     tables.add("CREATE TABLE daytrip.departure(" +
@@ -57,16 +58,18 @@ public class Schema {
         "dateBegin TIMESTAMP," +
         "available BOOLEAN," +
         "bookings INT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (tripId) REFERENCES daytrip.trip(id)" +
         ");");
     tables.add("CREATE TABLE daytrip.review(" +
         "id SERIAL PRIMARY KEY," +
-        "title VARCHAR(49)," +
+        "title VARCHAR(64)," +
         "text VARCHAR(999)," +
         "rating NUMERIC(2,1)," +
         "isPublic BOOLEAN," + // public er reserved í java
         "username VARCHAR(32)," +
         "tripId INT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (username) REFERENCES daytrip.users(username)," +
         "FOREIGN KEY (tripId) REFERENCES daytrip.trip(id)" +
         ");");
@@ -76,6 +79,7 @@ public class Schema {
         "departureId INT," +
         "bookedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
         "status VARCHAR(32)," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (username) REFERENCES daytrip.users(username)," +
         "FOREIGN KEY (departureId) REFERENCES daytrip.departure(id)" +
         ");");

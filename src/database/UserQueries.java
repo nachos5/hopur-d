@@ -1,6 +1,6 @@
 package database;
 
-import database.models.User;
+import models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +9,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class UserQueries {
+
+  private static User resultSetToUser(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    String username = rs.getString("username");
+    Boolean admin = rs.getBoolean("admin");
+    String email = rs.getString("email");
+    String password = rs.getString("password");
+    return new User(id, username, admin, email, password);
+  }
 
   public static void insertUser(User user) {
     String sql = "INSERT INTO daytrip.users(username,admin,email,password) VALUES(?,?,?,?);";
@@ -41,16 +50,28 @@ public class UserQueries {
       pstmt.setString(1, username);
 
       ResultSet rs = pstmt.executeQuery();
-      rs.next();
-
-      return new User(
-          rs.getString("username"),
-          rs.getBoolean("admin"),
-          rs.getString("email"),
-          rs.getString("password")
-      );
+      while (rs.next()) {
+        return resultSetToUser(rs);
+      }
     } catch (SQLException e) {
-      System.err.println("getUsers() failed: " + e.getMessage());
+      System.err.println("getUser() failed: " + e.getMessage());
+    }
+    return null;
+  }
+
+  public static User getUserById(int id) {
+    String sql = "SELECT * FROM daytrip.users WHERE id = ?";
+
+    try {
+      PreparedStatement pstmt = DbMain.conn.prepareStatement(sql);
+      pstmt.setInt(1, id);
+
+      ResultSet rs = pstmt.executeQuery();
+      while (rs.next()) {
+        return resultSetToUser(rs);
+      }
+    } catch (SQLException e) {
+      System.err.println("getUserById() failed: " + e.getMessage());
     }
     return null;
   }
@@ -64,12 +85,9 @@ public class UserQueries {
     try (Statement stmt = DbMain.conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
       while(rs.next()) {
-        String username = rs.getString("username");
-        Boolean admin = rs.getBoolean("admin");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
+        User user = resultSetToUser(rs);
         // bætum við notandanum í listann
-        users.add(new User(username, admin, email, password));
+        users.add(user);
       }
     } catch (SQLException e) {
       System.err.println("getAllUsers() failed: " + e.getMessage());

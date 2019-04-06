@@ -1,11 +1,29 @@
 package database;
 
-import database.models.*;
+import models.Review;
+import models.Trip;
+import models.User;
+import org.json.JSONObject;
+import models.JSON.*;
+import static models.JSON.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class ReviewQueries {
+
+  private static Review resultSetToReview(ResultSet rs) throws SQLException {
+    int id = rs.getInt("id");
+    String title = rs.getString("title");
+    String text = rs.getString("text");
+    Double rating = rs.getDouble("rating");
+    Boolean isPublic = rs.getBoolean("isPublic");
+    String username = rs.getString("username");
+    User user = UserQueries.getUser(username);
+    int tripId = rs.getInt("tripId");
+    Trip trip = TripQueries.getTripById(tripId);
+    return new Review(id, user, trip, title, text, rating, isPublic);
+  }
 
   /**
    * setur inn review í databaseið með prepare-uðu statementi
@@ -31,6 +49,40 @@ public class ReviewQueries {
     }
   }
 
+  public static ArrayList<Review> dynamicReviewQuery(JSONObject obj) {
+    ArrayList<Review> reviews = new ArrayList<>();
+    if (obj.length() == 0) return reviews;
+
+    ArrayList<String> conditions = new ArrayList<>();
+    String orderBy = "";
+
+    if (obj.has(resolveReview(reviewJSONenum.USER))) conditions.add("userId = " + obj.get("user"));
+    if (obj.has(resolveReview(reviewJSONenum.TITLE))) conditions.add("title = " + obj.get("title"));
+    if (obj.has(resolveReview(reviewJSONenum.TEXT))) conditions.add("text = " + obj.get("text"));
+    if (obj.has(resolveReview(reviewJSONenum.RATING))) conditions.add("rating = " + obj.get("rating"));
+    if (obj.has(resolveReview(reviewJSONenum.RATINGMIN))) conditions.add("rating > " + obj.get("ratingMin"));
+    if (obj.has(resolveReview(reviewJSONenum.RATINGMAX)))  conditions.add("rating < " + obj.get("ratingMax"));
+    if (obj.has(resolveReview(reviewJSONenum.ISPUBLIC))) conditions.add("isPublic = " + obj.get("isPublic"));
+    if (obj.has(resolveReview(reviewJSONenum.ORDERBY))) orderBy += " order by " + obj.get("orderBy");
+
+    String sql = "SELECT * FROM daytrip.review WHERE " + String.join(" and ", conditions) + orderBy + ";";
+
+    try (Statement stmt = DbMain.conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+      while (rs.next()) {
+        Review review = resultSetToReview(rs);
+        // bætum við ferðinni í listann
+        reviews.add(review);
+      }
+    } catch (SQLException e) {
+      System.err.println("getAllReviews() failed: " + e.getMessage());
+    }
+
+    return reviews;
+  }
+
+
   public static ArrayList<Review> getAllReviews() {
     ArrayList<Review> reviews = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.review;";
@@ -39,19 +91,9 @@ public class ReviewQueries {
          ResultSet rs = stmt.executeQuery(sql)) {
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String title = rs.getString("title");
-        String text = rs.getString("text");
-        Double rating = rs.getDouble("rating");
-        Boolean isPublic = rs.getBoolean("isPublic");
-        String username = rs.getString("username");
-        User user = UserQueries.getUser(username);
-        int tripId = rs.getInt("tripId");
-        Trip trip = TripQueries.getTripById(tripId);
+        Review review = resultSetToReview(rs);
         // bætum við ferðinni í listann
-        reviews.add(
-            new Review(id, user, trip, title, text, rating, isPublic)
-        );
+        reviews.add(review);
       }
     } catch (SQLException e) {
       System.err.println("getAllReviews() failed: " + e.getMessage());
@@ -68,15 +110,7 @@ public class ReviewQueries {
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        int id = rs.getInt("id");
-        String username = rs.getString("username");
-        int tripId = rs.getInt("tripId");
-        String title = rs.getString("title");
-        String text = rs.getString("text");
-        Double rating = rs.getDouble("rating");
-        Boolean isPublic = rs.getBoolean("isPublic");
-
-        return new Review(id, UserQueries.getUser(username), TripQueries.getTripById(tripId), title, text, rating, isPublic);
+        return resultSetToReview(rs);
       }
     } catch (SQLException e) {
       System.err.println("getReviewById() failed: " + e.getMessage());

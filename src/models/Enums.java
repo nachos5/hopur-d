@@ -1,4 +1,6 @@
-package database.models;
+package models;
+
+import java.util.ArrayList;
 
 /**
  * Enums til að staðfesta að ákveðin gögn sem fara í database-ið séu rétt
@@ -6,17 +8,27 @@ package database.models;
 public class Enums {
 
   public enum Category {
-    FJALLGANGA, JOKLAFERD, RUTUFERD
+    MOUNTAIN, GLACIER, BUS, ADVENTURE, HORSE, SIGHTSEEING, BIKING
   }
 
   public static String resolveCategory(Category c) {
     switch (c) {
-      case FJALLGANGA:
-        return "Fjallganga";
-      case JOKLAFERD:
-        return "Jöklaferð";
-      case RUTUFERD:
-        return "Rútuferð";
+
+      case MOUNTAIN:
+        return "Mountain";
+      case GLACIER:
+        return "Glacier";
+      case BUS:
+        return "Bus";
+      case ADVENTURE:
+        return "Adventure";
+      case HORSE:
+        return "Horse Riding";
+      case SIGHTSEEING:
+        return "Sightseeing";
+      case BIKING:
+        return "Bike Tour";
+
       default: // kemst augljóslega aldrei hingað en java vælir ef þetta er ekki...
         return "";
     }

@@ -1,11 +1,11 @@
 package database.dev;
 
-import database.models.*;
+import models.*;
 import main.utilities.Utils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import com.github.javafaker.Faker;
+
 
 import static main.utilities.Utils.*;
 import static database.BookingQueries.*;
@@ -16,6 +16,16 @@ import static database.TripQueries.*;
 import static database.UserQueries.*;
 
 public class Insert {
+  private static Faker faker = new Faker();
+  private static int noCompanies = 5;
+  private static int noTrips = 20;
+  private static int noDepartures = 40;
+  private static int noUsers = 10;
+  private static int noReviews = 20;
+  private static int noBookings = 20;
+
+  private static int delayBetweenInserts = 25;
+
   public static void run() {
     // upphafs-notendagögn
     createInitialUsers();
@@ -32,76 +42,105 @@ public class Insert {
 
   private static void createInitialCompanies() {
     ArrayList<Company> companies = new ArrayList<>();
-    companies.add(new Company("Flott fyrirtæki", 4.5, "Flottar ferðir hjá flottu fyrirtæki"));
-    companies.add(new Company("Epic Adventures", 5.0, "Enjoy some epic adventures, perfect for lit people!"));
+
+    for (int i=0; i<noCompanies; i++) {
+      companies.add(new Company(String.join(" ", faker.lorem().words(2)) + " trips",
+          faker.lorem().paragraph()));
+    }
 
     for (Company company: companies) {
       insertCompany(company);
-      delay(50);
+      delay(delayBetweenInserts);
     }
   }
 
   private static void createInitialUsers() {
     ArrayList<User> users = new ArrayList<>();
     users.add(new User("admin", true, "admin@gmail.com", Utils.hashPassword("admin")));
-    users.add(new User("user", false,"user@gmail.com", Utils.hashPassword("siggi")));
-    users.add(new User("Bubbi", false, "bubbi@gmail.com", Utils.hashPassword("bubbi")));
+
+    for (int i=0; i<noUsers; i++) {
+      users.add(new User(faker.name().username() + faker.number().numberBetween(100,999),
+          false, faker.internet().emailAddress(),
+          Utils.hashPassword(faker.internet().password())));
+    }
+    users.add(new User("user", false,"user@gmail.com", Utils.hashPassword("user")));
+    users.add(new User("testuser2", false, "user2@gmail.com", Utils.hashPassword("bubbi")));
 
     for (User user: users) {
       insertUser(user);
-      delay(50);
+      delay(delayBetweenInserts);
     }
   }
 
   private static void createInitialTrips() {
     ArrayList<Trip> trips = new ArrayList<>();
-    trips.add(new Trip("Fjallganga", Enums.Category.FJALLGANGA, 15000, 420, 5, Enums.Country.IS, Enums.City.RVK,
-        Enums.Accessability.MEDIUM, Enums.Language.IS, true, 4.0, "Fjallganga fyrir frískt fólk!", getCompanyById(1)));
-    trips.add(new Trip("Glacier trip", Enums.Category.JOKLAFERD, 20000, 123, 10, Enums.Country.US, Enums.City.NY,
-        Enums.Accessability.BRUTAL, Enums.Language.EN, true, 4.5, "Epic glacier trip in New York, the home of glaciers!", getCompanyById(2)));
-    trips.add(new Trip("Bus trip", Enums.Category.RUTUFERD, 10000, 333, 24, Enums.Country.UK, Enums.City.LON,
-        Enums.Accessability.EASY, Enums.Language.EN, false, 3.5, "Savage bus trip m8!", getCompanyById(2)));
+
+    for (int i=0; i<noTrips; i++) {
+      trips.add(new Trip(String.join(" ", faker.lorem().words(2)) + " trip", Utils.randomEnum(Enums.Category.class), faker.number().numberBetween(30, 1000),
+          faker.number().numberBetween(100, 800), faker.number().numberBetween(4, 50), Utils.randomEnum(Enums.Country.class),
+          Utils.randomEnum(Enums.City.class), Utils.randomEnum(Enums.Accessability.class), Utils.randomEnum(Enums.Language.class),
+          Math.random() < 0.5, faker.lorem().paragraph(), getCompanyById( faker.number().numberBetween(1, noCompanies) )));
+    }
 
     // setjum allar ferðirnar í database-ið
     for (Trip t: trips) {
       insertTrip(t);
-      delay(50); // bíðum smá á milli requesta
+      delay(delayBetweenInserts); // bíðum smá á milli requesta
     }
   }
 
   private static void createInitialDepartures() {
     ArrayList<Departure> departures = new ArrayList<>();
-    departures.add(new Departure(getTripById(1), new GregorianCalendar(2019, Calendar.JUNE, 10, 12, 30, 0), true, 2));
-    departures.add(new Departure(getTripById(2), new GregorianCalendar(2019, Calendar.JULY, 20, 8, 0, 0), false, 10));
-    departures.add(new Departure(getTripById(3), new GregorianCalendar(2019, Calendar.AUGUST, 30, 11, 20, 0), true, 0));
+
+    for (int i=0; i<noDepartures; i++) {
+      int randTripId = faker.number().numberBetween(1, noTrips);
+      Trip trip = getTripById(randTripId);
+      departures.add(new Departure(trip, Utils.randomDate(2020, 2021), Math.random() < 0.5,
+          faker.number().numberBetween(0, trip.getGroupSize())));
+    }
 
     for (Departure d: departures) {
       insertDeparture(d);
-      delay(50);
+      delay(delayBetweenInserts);
     }
   }
 
   private static void createInitialReviews() {
     ArrayList<Review> reviews = new ArrayList<>();
+
+    for (int i=0; i<noReviews; i++) {
+      User user = getUserById(faker.number().numberBetween(1, noUsers + 1));
+      int randTripId = faker.number().numberBetween(1, noTrips);
+      Trip trip = getTripById(randTripId);
+      reviews.add(new Review(user, trip, String.join(" ", faker.lorem().words(2)), faker.lorem().sentence(),
+          faker.number().randomDouble(1, 0, 5), Math.random() < 0.5));
+
+    }
     reviews.add(new Review(getUser("admin"), getTripById(1), "Vá!", "Frábær ganga!", 5.0, true));
     reviews.add(new Review(getUser("user"), getTripById(1), "Glatað!", "Ömurleg ganga!", 0.5, true));
-    reviews.add(new Review(getUser("Bubbi"), getTripById(2), "Farið til helvítis!", "Ætla að kæra ykkur fyrir ósættanlega framkomu!", 0.0, false));
+    reviews.add(new Review(getUser("testuser2"), getTripById(2), "Farið til helvítis!", "Ætla að kæra ykkur fyrir ósættanlega framkomu!", 0.0, false));
 
     for (Review review: reviews) {
       insertReview(review);
-      delay(50);
+      delay(delayBetweenInserts);
     }
   }
 
   private static void createInitialBookings() {
     ArrayList<Booking> bookings = new ArrayList<>();
+
+    for (int i=0; i<noBookings; i++) {
+      User user = getUserById(faker.number().numberBetween(1, noUsers + 1));
+      Departure departure = getDepartureById(faker.number().numberBetween(1, noDepartures));
+      bookings.add(new Booking(user, departure, randomEnum(Enums.Status.class)));
+    }
     bookings.add(new Booking(getUser("admin"), getDepartureById(1), Enums.Status.UNPAID));
     bookings.add(new Booking(getUser("admin"), getDepartureById(2), Enums.Status.PAID));
-    bookings.add(new Booking(getUser("Bubbi"), getDepartureById(3), Enums.Status.UNPAID));
+    bookings.add(new Booking(getUser("user"), getDepartureById(1), Enums.Status.UNPAID));
 
     for (Booking booking: bookings) {
       insertBooking(booking);
-      delay(50);
+      delay(delayBetweenInserts);
     }
   }
 

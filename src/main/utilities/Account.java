@@ -1,7 +1,9 @@
 package main.utilities;
 
 import database.UserQueries;
-import database.models.User;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import models.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 
@@ -9,15 +11,31 @@ public class Account {
 
     private static User currentUser;
     private static SimpleStringProperty currentUsername;
+    private static SimpleBooleanProperty isNoUser;
+    private static SimpleBooleanProperty isNotAdmin;
     private static final User noUser  = new User("NoUser", false, "NoUser@gmail.com","NoUserPassword");
 
     static {
         currentUser = noUser;
         currentUsername = new SimpleStringProperty("");
+        isNoUser = new SimpleBooleanProperty(true);
+        isNotAdmin = new SimpleBooleanProperty(true);
     }
 
     public static User getCurrentUser() {
         return currentUser;
+    }
+
+    public static Boolean isLoggedIn() {
+        return currentUser != noUser;
+    }
+
+    public static ObservableBooleanValue isLoggedInObservable() {
+        return isNoUser;
+    }
+
+    public static ObservableBooleanValue isAdminObservable() {
+        return isNotAdmin;
     }
 
     public static ObservableStringValue getCurrentUsername() {
@@ -27,19 +45,21 @@ public class Account {
     public static void login(String username, String password) {
         User user = UserQueries.getUser(username);
 
-        System.out.println("user = " + user);
-        if (user == null) {
-            currentUser = noUser;
-            currentUsername.set("");
-        }
-        else if (Utils.checkPassword(password, user.getPassword())) {
+        if (user == null) return;
+        if (Utils.checkPassword(password, user.getPassword())) {
             currentUser = user;
             currentUsername.set(user.getUsername());
+            isNoUser.set(false);
+
+            // Set admin privileges to true
+            if (user.isAdmin()) isNotAdmin.set(false);
         }
     }
 
     public static void logout() {
         currentUser = noUser;
         currentUsername.set("");
+        isNoUser.set(true);
+        isNotAdmin.set(true);
     }
 }
