@@ -84,6 +84,26 @@ public class DepartureQueries {
     return departures;
   }
 
+  public static ArrayList<Departure> getAvailableDepartures() {
+    ArrayList<Departure> departures = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.departure WHERE available=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setBoolean(1, true);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Departure departure = resultSetToDeparture(rs);
+        // bætum við ferðinni í listann
+        departures.add(departure);
+      }
+    } catch (SQLException e) {
+      System.err.println("getAvailableDepartures() failed: " + e.getMessage());
+    }
+
+    return departures;
+  }
+
   public static Departure getDepartureById(int depId) {
     String sql = "SELECT * FROM daytrip.departure where id=?;";
 

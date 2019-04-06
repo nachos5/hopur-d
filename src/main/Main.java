@@ -12,6 +12,9 @@ import main.gui.MainMenuBar;
 import main.utilities.Account;
 import main.utilities.Language;
 import main.utilities.UTF8Control;
+import models.Review;
+import models.Trip;
+import models.Company;
 
 import java.io.IOException;
 import java.util.*;
@@ -65,7 +68,24 @@ public class Main extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DbMain.init(true);
+        DbMain.init(false);
+
+        for (Review review: API.getReviewsByRatingRange(1.0, 3.5, false)) {
+            System.out.println(review.getRating());
+        }
+
+        for (Review review: API.getPublicReviews()) {
+            System.out.println(review.getIsPublic());
+        }
+
+        for (Trip trip: API.getAllTrips()) {
+            System.out.println(trip.getName());
+        }
+
+        for (Company company: API.getCompaniesByNameQuery("nemo")) {
+            System.out.println(company.getName());
+        }
+
         launch(args);
     }
 

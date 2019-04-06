@@ -17,12 +17,12 @@ import static database.UserQueries.*;
 
 public class Insert {
   private static Faker faker = new Faker();
-  private static int noCompanies = 20;
-  private static int noTrips = 200;
-  private static int noDepartures = 1000;
-  private static int noUsers = 20;
-  private static int noReviews = 100;
-  private static int noBookings = 200;
+  private static int noCompanies = 5;
+  private static int noTrips = 20;
+  private static int noDepartures = 40;
+  private static int noUsers = 10;
+  private static int noReviews = 20;
+  private static int noBookings = 20;
 
   private static int delayBetweenInserts = 25;
 
@@ -44,7 +44,7 @@ public class Insert {
     ArrayList<Company> companies = new ArrayList<>();
 
     for (int i=0; i<noCompanies; i++) {
-      companies.add(new Company(String.join(" ", faker.lorem().words(2)) + " Trips",
+      companies.add(new Company(String.join(" ", faker.lorem().words(2)) + " trips",
           faker.lorem().paragraph()));
     }
 
@@ -76,7 +76,7 @@ public class Insert {
     ArrayList<Trip> trips = new ArrayList<>();
 
     for (int i=0; i<noTrips; i++) {
-      trips.add(new Trip(String.join(" ", faker.lorem().words(2)) + " Trip", Utils.randomEnum(Enums.Category.class), faker.number().numberBetween(30, 1000),
+      trips.add(new Trip(String.join(" ", faker.lorem().words(2)) + " trip", Utils.randomEnum(Enums.Category.class), faker.number().numberBetween(30, 1000),
           faker.number().numberBetween(100, 800), faker.number().numberBetween(4, 50), Utils.randomEnum(Enums.Country.class),
           Utils.randomEnum(Enums.City.class), Utils.randomEnum(Enums.Accessability.class), Utils.randomEnum(Enums.Language.class),
           Math.random() < 0.5, faker.lorem().paragraph(), getCompanyById( faker.number().numberBetween(1, noCompanies) )));

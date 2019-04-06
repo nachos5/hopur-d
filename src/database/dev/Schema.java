@@ -26,12 +26,14 @@ public class Schema {
         "username VARCHAR(64) UNIQUE," +
         "admin BOOLEAN," +
         "email VARCHAR(64) UNIQUE," +
-        "password VARCHAR(128) UNIQUE" +
+        "password VARCHAR(128) UNIQUE," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP" +
         ");");
     tables.add("CREATE TABLE daytrip.company(" +
         "id SERIAL PRIMARY KEY," +
         "name VARCHAR(64)," +
-        "description TEXT" +
+        "description TEXT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP" +
         ");");
     tables.add("CREATE TABLE daytrip.trip(" +
         "id SERIAL PRIMARY KEY," +
@@ -47,6 +49,7 @@ public class Schema {
         "sustainable BOOLEAN," +
         "description TEXT," +
         "companyId int," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (companyId) REFERENCES daytrip.company(id)" +
         ");");
     tables.add("CREATE TABLE daytrip.departure(" +
@@ -55,6 +58,7 @@ public class Schema {
         "dateBegin TIMESTAMP," +
         "available BOOLEAN," +
         "bookings INT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (tripId) REFERENCES daytrip.trip(id)" +
         ");");
     tables.add("CREATE TABLE daytrip.review(" +
@@ -65,6 +69,7 @@ public class Schema {
         "isPublic BOOLEAN," + // public er reserved í java
         "username VARCHAR(32)," +
         "tripId INT," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (username) REFERENCES daytrip.users(username)," +
         "FOREIGN KEY (tripId) REFERENCES daytrip.trip(id)" +
         ");");
@@ -74,6 +79,7 @@ public class Schema {
         "departureId INT," +
         "bookedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
         "status VARCHAR(32)," +
+        "created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP," +
         "FOREIGN KEY (username) REFERENCES daytrip.users(username)," +
         "FOREIGN KEY (departureId) REFERENCES daytrip.departure(id)" +
         ");");

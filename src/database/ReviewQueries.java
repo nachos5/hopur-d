@@ -3,6 +3,9 @@ package database;
 import models.Review;
 import models.Trip;
 import models.User;
+import org.json.JSONObject;
+import models.JSON.*;
+import static models.JSON.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,6 +48,40 @@ public class ReviewQueries {
       System.err.println("insertReview() failed:" + e.getMessage());
     }
   }
+
+  public static ArrayList<Review> dynamicReviewQuery(JSONObject obj) {
+    ArrayList<Review> reviews = new ArrayList<>();
+    if (obj.length() == 0) return reviews;
+
+    ArrayList<String> conditions = new ArrayList<>();
+    String orderBy = "";
+
+    if (obj.has(resolveReview(reviewJSONenum.USER))) conditions.add("userId = " + obj.get("user"));
+    if (obj.has(resolveReview(reviewJSONenum.TITLE))) conditions.add("title = " + obj.get("title"));
+    if (obj.has(resolveReview(reviewJSONenum.TEXT))) conditions.add("text = " + obj.get("text"));
+    if (obj.has(resolveReview(reviewJSONenum.RATING))) conditions.add("rating = " + obj.get("rating"));
+    if (obj.has(resolveReview(reviewJSONenum.RATINGMIN))) conditions.add("rating > " + obj.get("ratingMin"));
+    if (obj.has(resolveReview(reviewJSONenum.RATINGMAX)))  conditions.add("rating < " + obj.get("ratingMax"));
+    if (obj.has(resolveReview(reviewJSONenum.ISPUBLIC))) conditions.add("isPublic = " + obj.get("isPublic"));
+    if (obj.has(resolveReview(reviewJSONenum.ORDERBY))) orderBy += " order by " + obj.get("orderBy");
+
+    String sql = "SELECT * FROM daytrip.review WHERE " + String.join(" and ", conditions) + orderBy + ";";
+
+    try (Statement stmt = DbMain.conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+      while (rs.next()) {
+        Review review = resultSetToReview(rs);
+        // bætum við ferðinni í listann
+        reviews.add(review);
+      }
+    } catch (SQLException e) {
+      System.err.println("getAllReviews() failed: " + e.getMessage());
+    }
+
+    return reviews;
+  }
+
 
   public static ArrayList<Review> getAllReviews() {
     ArrayList<Review> reviews = new ArrayList<>();

@@ -53,6 +53,46 @@ public class CompanyQueries {
     return companies;
   }
 
+  public static ArrayList<Company> getCompaniesByNameQuery(String query) {
+    ArrayList<Company> companies = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.company WHERE name LIKE '%' || ? || '%';";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, query);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Company company = resultSetToCompany(rs);
+        // bætum við ferðinni í listann
+        companies.add(company);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompaniesByNameQuery() failed: " + e.getMessage());
+    }
+
+    return companies;
+  }
+
+  public static ArrayList<Company> getCompaniesByDescriptionQuery(String query) {
+    ArrayList<Company> companies = new ArrayList<>();
+    String sql = "SELECT * FROM daytrip.company WHERE description LIKE '%' || ? || '%';";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, query);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Company company = resultSetToCompany(rs);
+        // bætum við ferðinni í listann
+        companies.add(company);
+      }
+    } catch (SQLException e) {
+      System.err.println("getCompaniesByDescriptionQuery() failed: " + e.getMessage());
+    }
+
+    return companies;
+  }
+
   public static Company getCompanyById(int depId) {
     String sql = "SELECT * FROM daytrip.company where id=?;";
 
