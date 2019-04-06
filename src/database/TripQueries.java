@@ -2,6 +2,8 @@ package database;
 
 import models.Review;
 import models.Trip;
+import models.Company;
+import models.Enums;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -129,6 +131,41 @@ public class TripQueries {
       System.err.println("getTripById() failed: " + e.getMessage());
     }
     return null;
+  }
+
+  public static ArrayList<Trip> getTripByLocation(Enums.Country country, Enums.City city) {
+    String co = Enums.resolveCountry(country);
+    String ci = Enums.resolveCity(city);
+
+    String sql = "SELECT * FROM daytrip.trip" +
+            "WHERE country = ?" +
+            "AND city = ?";
+
+    ArrayList<Trip> trips = new ArrayList<>();
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, co);
+      pstmt.setString(2, ci);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Trip trip = resultSetToTrip(rs, false);
+        trips.add(trip);
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripsByLocation() failed" + e.getMessage());
+    }
+
+    return trips;
+  }
+  /**
+   * Nær í allar ferðir frá fyrirtæki
+   * @param companyName
+   * @return listi af ferðum fyrirtækisins
+   */
+  public static ArrayList<Trip> getTripsByCompany(String companyName) {
+    Company company = CompanyQueries.getCompanyByName(companyName);
+    return getTripsByCompanyId(company.getId());
   }
 
   /**
