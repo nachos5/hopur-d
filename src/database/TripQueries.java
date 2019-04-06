@@ -78,7 +78,6 @@ public class TripQueries {
    * @return an arraylist with all the trips from the database
    */
   public static ArrayList<Trip> getAllTrips() {
-    //connect();
     ArrayList<Trip> trips = new ArrayList<>();
     String sql = "SELECT * FROM daytrip.trip;";
 

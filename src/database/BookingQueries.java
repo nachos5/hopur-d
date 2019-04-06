@@ -89,6 +89,23 @@ public class BookingQueries {
     return null;
   }
 
+  public static Booking getBookingByUsername(String username) {
+    String sql = "SELECT * FROM daytrip.booking where username=?;";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, username);
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        return resultSetToBooking(rs);
+      }
+    } catch (SQLException e) {
+      System.err.println("getBookingByUsername() failed: " + e.getMessage());
+    }
+
+    return null;
+  }
+
   /**
    * deletes a booking from the database by id
    * @param id the id of the booking to delete
