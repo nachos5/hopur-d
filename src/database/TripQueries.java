@@ -3,10 +3,13 @@ package database;
 import models.Review;
 import models.Trip;
 import models.Company;
-import models.Enums;
+import models.JSON.*;
+import static models.JSON.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import org.json.JSONObject;
+
 
 public class TripQueries {
 
@@ -107,7 +110,7 @@ public class TripQueries {
       pstmt.setInt(1, tripId);
       ResultSet rs = pstmt.executeQuery();
 
-      while (rs.next()) {
+      if (rs.next()) {
         return resultSetToTrip(rs, true);
       }
     } catch (SQLException e) {
@@ -123,7 +126,7 @@ public class TripQueries {
       pstmt.setString(1, name);
       ResultSet rs = pstmt.executeQuery();
 
-      while (rs.next()) {
+      if (rs.next()) {
         return resultSetToTrip(rs, true);
       }
     } catch (SQLException e) {
@@ -132,23 +135,28 @@ public class TripQueries {
     return null;
   }
 
-  public static ArrayList<Trip> getTripByLocation(Enums.Country country, Enums.City city) {
-    String co = Enums.resolveCountry(country);
-    String ci = Enums.resolveCity(city);
+  public static ArrayList<Trip> getTripByLocation(String country, String city) {
+    ArrayList<Trip> trips = new ArrayList<>();
+
+    if (
+      !models.Enums.isInEnum(country, models.JSON.tripJSONenum.class) ||
+      !models.Enums.isInEnum(country, models.JSON.tripJSONenum.class)
+    ) {
+      return trips;
+    }
 
     String sql = "SELECT * FROM daytrip.trip" +
             "WHERE country = ?" +
             "AND city = ?";
 
-    ArrayList<Trip> trips = new ArrayList<>();
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
-      pstmt.setString(1, co);
-      pstmt.setString(2, ci);
+      pstmt.setString(1, country);
+      pstmt.setString(2, city);
 
       ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        Trip trip = resultSetToTrip(rs, false);
+        Trip trip = resultSetToTrip(rs, true);
         trips.add(trip);
       }
     } catch (SQLException e) {
@@ -157,14 +165,18 @@ public class TripQueries {
 
     return trips;
   }
+
   /**
-   * Nær í allar ferðir frá fyrirtæki
+   * Obtains all trips from the given company
    * @param companyName
-   * @return listi af ferðum fyrirtækisins
+   * @return An ArrayList of the companies trips, null if no company
+   * of that name was found
    */
   public static ArrayList<Trip> getTripsByCompany(String companyName) {
     Company company = CompanyQueries.getCompanyByName(companyName);
-    return getTripsByCompanyId(company.getId());
+    if (company != null)
+      return getTripsByCompanyId(company.getId());
+    return null;
   }
 
   /**
@@ -182,7 +194,6 @@ public class TripQueries {
 
       while (rs.next()) {
         Trip trip = resultSetToTrip(rs, false);
-        // bætum við ferðinni í listann
         trips.add(trip);
       }
     } catch (SQLException e) {
@@ -192,10 +203,10 @@ public class TripQueries {
   }
 
   /**
-   * Skilar lista af ferðum sem eru á ákveðnum tíma
-   * @param startDate lágmarks dagsetning
-   * @param endDate hámarks dagsetning( setja inn null ef það á ekki að vera hámark )
-   * @return Listi af ferðum
+   * Gets all trips within a certain time range
+   * @param startDate
+   * @param endDate
+   * @return An ArrayList of the trips that meet the criteria
    */
   public static ArrayList<Trip> getTripsAtTime(Timestamp startDate, Timestamp endDate) {
     ArrayList<Trip> trips = new ArrayList<>();
@@ -216,7 +227,7 @@ public class TripQueries {
 
       ResultSet rs = pstmt.executeQuery();
       while (rs.next()) {
-        Trip trip = resultSetToTrip(rs, false);
+        Trip trip = resultSetToTrip(rs, true);
         trips.add(trip);
       }
     } catch (SQLException e) {
@@ -226,29 +237,36 @@ public class TripQueries {
   }
 
   /**
-   * Sækir lista af ferðum úr gagnagrunni sem passa við leitarstrenginn,
-   * þ.e. leitarstrengurinn passar við nafn, lýsingu eða flokk ferðar
-   * (Postgres styður bara ensku)
-   * @param search leitarstrengurinn
-   * @return ArrayListi með þeim ferðum sem passa við strenginn
+   * Gets all trips that start after a certain time
+   * @param startDate
+   * @return An ArrayList of the trips that meet the criteria
    */
-  public static ArrayList<Trip> getTripsBySearchString(String search) {
+  public static ArrayList<Trip> getTripsAtTime(Timestamp startDate) {
+    return getTripsAtTime(startDate, null);
+  }
+
+  /**
+   * Gets a list of trips who's title or description match the search string
+   * @param searchString
+   * @return ArrayList of the matching trips
+   */
+  public static ArrayList<Trip> getTripsBySearchString(String searchString) {
     ArrayList<Trip> trips =  new ArrayList<>();
     String sql = "SELECT * FROM daytrip.trip WHERE" +
             "to_tsvector('english', name) @@ to_tsquery('english', ?)" +
             "OR to_tsvector('english', description) @@ plainto_tsquery('english', ?)" +
             "OR to_tsvector('english', category) @@ plainto_tsquery('english', ?)";
-    // Leita eftir fyrirtæki líka?
-    // Örlítið vesen þar sem við höfum bara id í trip
+
+    String splicedSearchString = searchString.replaceAll(" ", "_");
     try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
-      pstmt.setString(1, search);
-      pstmt.setString(2, search);
-      pstmt.setString(3, search);
+      pstmt.setString(1, splicedSearchString);
+      pstmt.setString(2, splicedSearchString);
+      pstmt.setString(3, splicedSearchString);
 
       ResultSet rs = pstmt.executeQuery();
 
       while(rs.next()) {
-        trips.add(resultSetToTrip(rs, false));
+        trips.add(resultSetToTrip(rs, true));
       }
     } catch (SQLException e) {
       System.err.println("getTripsBySearchString() failed" + e.getMessage());
@@ -258,24 +276,26 @@ public class TripQueries {
   }
 
   /**
-   * Sækir lista af ferðum úr gagnagrunni sem eru á verðbilinu
-   * @param maxPrice hámarks verð
-   * @param minPrice lágmarks verð
-   * @return
+   * Gets a list of trips within the pricerange
+   * @param maxPrice
+   * @param minPrice
+   * @return ArrayList of the trips within the pricerange
    */
   public static ArrayList<Trip> getTripPriceRange(int maxPrice, int minPrice) {
     ArrayList<Trip> trips = new ArrayList<>();
-    String sql = "SELECT * FROM daytrip.trip" +
-            "WHERE price > ? AND price < ?";
+    String whereClause = minPrice == 0 ? "WHERE price <= ?" : "WHERE price <= ? AND price => ?";
+    String sql = "SELECT * FROM daytrip.trip" + whereClause;
 
     try(PreparedStatement pstmt = DbMain.conn.prepareStatement((sql))) {
       pstmt.setInt(1, maxPrice);
-      pstmt.setInt(2, minPrice);
+
+      if (minPrice != 0)
+        pstmt.setInt(2, minPrice);
 
       ResultSet rs = pstmt.executeQuery();
 
       while(rs.next()) {
-        trips.add(resultSetToTrip(rs, false));
+        trips.add(resultSetToTrip(rs, true));
       }
     } catch (SQLException e) {
       System.err.println("getTripsBySearchString() failed" + e.getMessage());
@@ -284,39 +304,12 @@ public class TripQueries {
   }
 
   /**
-   * Sækir lista af ferðum sem passa við leitarstreng og eru á verðbilinu
-   * @param maxPrice hámarks verð
-   * @param minPrice lágmarks verð
-   * @param search leitarstrengur
-   * @return
+   * Gets a list of trips cheaper then the given price
+   * @param price
+   * @return ArrayList of the trips
    */
-  public static ArrayList<Trip> getTripPriceSearch(int maxPrice, int minPrice, String search) {
-    ArrayList<Trip> trips =  new ArrayList<>();
-    String sql = "SELECT * FROM daytrip.trip WHERE" +
-            "to_tsvector('english', name) @@ to_tsquery('english', ?)" +
-            "OR to_tsvector('english', description) @@ plainto_tsquery('english', ?)" +
-            "OR to_tsvector('english', category) @@ plainto_tsquery('english', ?)" +
-            "AND price > ?" +
-            "AND price < ?";
-    // Leita eftir fyrirtæki líka?
-    // Örlítið vesen þar sem við höfum bara id í trip
-    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
-      pstmt.setString(1, search);
-      pstmt.setString(2, search);
-      pstmt.setString(3, search);
-      pstmt.setInt(1, maxPrice);
-      pstmt.setInt(2, minPrice);
-
-      ResultSet rs = pstmt.executeQuery();
-
-      while(rs.next()) {
-        trips.add(resultSetToTrip(rs, false));
-      }
-    } catch (SQLException e) {
-      System.err.println("getTripsBySearchString() failed" + e.getMessage());
-    }
-
-    return trips;
+  public static ArrayList<Trip> getTripPriceRange(int price) {
+    return getTripPriceRange(price, 0);
   }
 
   public static void updateTrip(Trip trip) {
@@ -345,11 +338,6 @@ public class TripQueries {
     }
   }
 
-  // möguleg approach: tveir ArrayList, einn fyrir gildin, annar fyrir dálka
-  //                   trip object sem hefur allt nema uppfærða dálka sem null
-  //                   ArrayList með key-value pörum
-  // Pæling með heppilegt return value, id eða name eða öll ferðin?
-  // Hvernig er best að setja saman SET col = ?,... án þess að opna fyrir SQL inj.?
   /**
    *
    * @param id id ferðar sem á að uppfæra
@@ -365,7 +353,7 @@ public class TripQueries {
     for(String col :  columns) {
       colString += col + " = ?,";
     }
-    // vantar sanitazion
+
     colString = colString.substring(0, colString.length()-1);
 
     String sql = "UPDATE daytrip.trip " + colString + " RETURNING id";
@@ -384,6 +372,130 @@ public class TripQueries {
   }
 
   /**
+   * Constructs a search query dynamicly based on a JSON object
+   * @param obj JSON
+   * @return ArrayList of matching trips
+   */
+  public static ArrayList<Trip> dynamicReviewQuery(JSONObject obj) {
+    ArrayList<Trip> trips = new ArrayList<>();
+    if (obj.length() == 0) return trips;
+
+    ArrayList<String> conditions = new ArrayList<>();
+    ArrayList<Object> values = new ArrayList<>();
+    String orderBy = "ORDER BY name";
+
+    if (obj.has(resolveTrip(tripJSONenum.NAME))) {
+      conditions.add("name like %?%");
+      values.add(obj.get("name"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.CATEGORY))) {
+      conditions.add("category = ?");
+      values.add(obj.get("category"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.MAXPRICE))) {
+      conditions.add("price <= ?");
+      values.add(obj.get("maxPrice"));
+    }
+    if (obj.has(resolveTrip(tripJSONenum.MINPRICE))) {
+      conditions.add("price > ?");
+      values.add(obj.get("minPrice"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.MAXDURATION))) {
+      conditions.add("duration <= ?");
+      values.add(obj.get("maxDuration"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.MINDURATION))) {
+      conditions.add("duration > ?");
+      values.add(obj.get("minDuration"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.GROUPSIZE))) {
+      conditions.add("groupSize <= ?");
+      values.add(obj.get("groupSize"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.COUNTRY))) {
+      conditions.add("country = ?");
+      values.add(obj.get("country"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.CITY))) {
+      conditions.add("city = ?");
+      values.add(obj.get("city"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.ACCESSABILITY))) {
+      conditions.add("accessability = ?");
+      values.add(obj.get("accessability"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.LANGUAGE))) {
+      conditions.add("language = ?");
+      values.add(obj.get("language"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.SUSTAINABLE))) {
+      conditions.add("sustainable = ?");
+      values.add(obj.get("sustainable"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.DESCRIPTION))) {
+      String splicedString = ((String) obj.get("isPublic")).replaceAll(" ", "_");
+      conditions.add(
+              "to_tsvector('english', description) @@ plainto_tsquery('english', ?)");
+      values.add(splicedString);
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.COMPANYID))) {
+      conditions.add("companyId = ?");
+      values.add(obj.get("companyId"));
+    }
+
+    if (obj.has(resolveTrip(tripJSONenum.STARTDATE))) {
+      String endClause = "";
+      if (obj.has(resolveTrip(tripJSONenum.ENDDATE))) {
+        endClause = " AND dateBegin <= ?";
+      }
+      String dateString = "id IN (" +
+              "SELECT * FROM daytrip.departure" +
+                      "WHERE dateBegin >= ?" +
+                      endClause +
+                      "AND available = TRUE)";
+    }
+
+    if(obj.has("orderBy")) {
+      if(models.Enums.isInEnum(((String)obj.get("orderBy")).toUpperCase(), models.JSON.tripJSONenum.class)) {
+        orderBy = "ORDER BY ?";
+        values.add(obj.get("orderBy"));
+      }
+    }
+
+    String sql = "SELECT * FROM daytrip.trip WHERE " + String.join(" and ", conditions) + orderBy + ";";
+
+    try (PreparedStatement stmt = DbMain.conn.prepareStatement(sql)) {
+      int i = 1;
+      for(Object value : values) {
+        stmt.setObject(i++, value);
+      }
+
+      ResultSet rs = stmt.executeQuery(sql);
+
+      while (rs.next()) {
+        Trip trip = resultSetToTrip(rs, true);
+        trips.add(trip);
+      }
+    } catch (SQLException e) {
+      System.err.println("getAllReviews() failed: " + e.getMessage());
+    }
+
+    return trips;
+  }
+
+  /**
    * deletes a trip from the database by id
    * @param id the id of the trip
    */
@@ -398,4 +510,5 @@ public class TripQueries {
       System.err.println("deleteTripById() failed: " + e.getMessage());
     }
   }
+
 }

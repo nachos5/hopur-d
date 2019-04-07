@@ -7,7 +7,10 @@ import static models.JSON.*;
 import static database.ReviewQueries.*;
 
 import org.json.JSONObject;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class API {
 
@@ -230,4 +233,154 @@ public class API {
     return UserQueries.getUserById(id);
   }
 
+  // ==== TRIP ==== //
+  public static Trip getTrip(int id) {
+    if (id < 0) {
+      throw new IllegalArgumentException("id is a positive integer");
+    }
+
+    return TripQueries.getTripById(id);
+  }
+
+  public static Trip getTrip(String name) {
+    if (name.length() < 1) {
+      throw new IllegalArgumentException("name must be a non-empty string");
+    }
+    return getTripByName(name);
+  }
+
+  public static ArrayList<Trip> getTripsBySearchString(String searchString) {
+    if (searchString.length() < 1) {
+      throw new IllegalArgumentException("The search string must not be empty");
+    }
+
+    return TripQueries.getTripsBySearchString(searchString);
+  }
+
+  public static ArrayList<Trip> getTripsByDate(Timestamp firstDate, Timestamp lastDate) {
+    return TripQueries.getTripsAtTime(firstDate, lastDate);
+  }
+
+  public static ArrayList<Trip> getTripsByDate(Timestamp firstDate) {
+    return TripQueries.getTripsAtTime(firstDate);
+  }
+
+  public static ArrayList<Trip> getTripsByCompany(int id) {
+    if (id < 0) {
+      throw new IllegalArgumentException("id is a positive integer");
+    }
+
+    return TripQueries.getTripsByCompanyId(id);
+  }
+  public static ArrayList<Trip> getTripsByCompany(String companyName) {
+    if (companyName.length() < 1) {
+      throw new IllegalArgumentException("CompanyName must be a non-empty string");
+    }
+    return TripQueries.getTripsByCompany(companyName);
+  }
+
+  public static ArrayList<Trip> getTripsByLocation(String country, String city) {
+    if (country.length() < 1 || city.length() < 1) {
+      throw new IllegalArgumentException("Country and city must be a non-empty strings");
+    }
+    return TripQueries.getTripByLocation(country, city);
+  }
+
+  private static ArrayList<String> validateJSON(JSONObject obj) {
+    Iterator<String> keys = obj.keys();
+    ArrayList<String> errors = new ArrayList<>();
+    while(keys.hasNext()) {
+      String key = keys.next();
+      Object value = obj.get(key);
+      if (key.equals("name")) {
+        if (((String)value).length() < 1) {
+          errors.add("name must be a non-empty string");
+        }
+      }
+
+      if (key.equals("category")) {
+        if (!(value instanceof String) || ((String)value).length() < 1) {
+          errors.add("category must be a non-empty string");
+        }
+      }
+      if (key.equals("maxPrice")) {
+        if (!(value instanceof Integer) || ((int)value) < 1) {
+          errors.add("maxPrice must be a positive integer");
+        }
+      }
+      if (key.equals("minPrice")) {
+        if (!(value instanceof Integer) || ((int)value) < 1) {
+          errors.add("minPrice must be a positive integer");
+        }
+      }
+      if (key.equals("maxDuration")) {
+        if (!(value instanceof Integer) || ((int)value) < 1) {
+          errors.add("maxDuration must be a positive integer");
+        }
+      }
+
+      if (key.equals("minDuration")) {
+        if (!(value instanceof Integer) || ((int)value) < 1) {
+          errors.add("minDuration must be a positive integer");
+        }
+      }
+
+      if (key.equals("groupSize")) {
+        if (!(value instanceof Integer) || ((int)value) < 1) {
+          errors.add("groupSize must be a positive integer");
+        }
+      }
+
+      if (key.equals("country")) {
+        if ((models.Enums.isInEnum(((String)value).toUpperCase(), models.Enums.Country.class))) {
+          errors.add("country must be a valid country");
+        }
+      }
+
+      if (key.equals("city")) {
+        if ((models.Enums.isInEnum(((String)value).toUpperCase(), models.Enums.Country.class))) {
+          errors.add("city must be a valid country");
+        }
+      }
+
+      if (key.equals("accessability")) {
+        if ((value).equals("true") || (value).equals("false")) {
+          errors.add("accessability must be a boolean value");
+        }
+      }
+      if (key.equals("sustainable")) {
+        if ((value).equals("true") || (value).equals("false")) {
+          errors.add("sustainable must be a boolean value");
+        }
+      }
+
+      if (key.equals("language")) {
+        if ((models.Enums.isInEnum(((String)value).toUpperCase(), models.Enums.Country.class))) {
+          errors.add("language must be a valid language");
+        }
+      }
+
+      if (key.equals("description")) {
+        if (!(value instanceof String) || ((String)value).length() < 1) {
+          errors.add("description must be a non-empty string");
+        }
+      }
+    }
+    return errors;
+  }
+
+  public static ArrayList<Trip> getTripsByJSON(JSONObject obj) {
+    Iterator<String> keys = obj.keys();
+    while(keys.hasNext()) {
+      String key = keys.next();
+      if (!models.Enums.isInEnum(key.toUpperCase(), models.JSON.tripJSONenum.class)) {
+        throw new IllegalArgumentException(key + "is not a valid key");
+      }
+      ArrayList<String> validations = validateJSON(obj);
+      if (validations.size() != 0) {
+        throw new IllegalArgumentException("Validation error \n" + validations.toString());
+      }
+    }
+    return TripQueries.dynamicReviewQuery(obj);
+  }
 }
