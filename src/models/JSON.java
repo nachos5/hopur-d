@@ -3,8 +3,8 @@ package models;
 // enums svo lyklar séu pottþétt eins allstaðar
 public class JSON {
   public enum tripJSONenum {
-    NAME, CATEGORY, PRICE, DURATION, GROUPSIZE, COUNTRY, CITY, ACCESSABILITY, LANGUAGE,
-    SUSTAINABLE, DESCRIPTION, COMPANYID
+    NAME, CATEGORY, MAXPRICE, MINPRICE, MAXDURATION, MINDURATION, GROUPSIZE, COUNTRY, CITY, ACCESSABILITY, LANGUAGE,
+    SUSTAINABLE, DESCRIPTION, COMPANYID, STARTDATE, ENDDATE
   }
 
   public static String resolveTrip(tripJSONenum t) {
@@ -13,10 +13,14 @@ public class JSON {
         return "name";
       case CATEGORY:
         return "category";
-      case PRICE:
-        return "price";
-      case DURATION:
-        return "duration";
+      case MAXPRICE:
+        return "maxPrice";
+      case MINPRICE:
+        return "minPrice";
+      case MAXDURATION:
+        return "maxDuration";
+      case MINDURATION:
+        return "minDuration";
       case GROUPSIZE:
         return "groupSize";
       case COUNTRY:
@@ -33,6 +37,10 @@ public class JSON {
         return "description";
       case COMPANYID:
         return "companyId";
+      case STARTDATE:
+        return "startDate";
+      case ENDDATE:
+        return "endDate";
       default:
         return "";
     }
