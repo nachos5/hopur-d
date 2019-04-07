@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+
+<GridPane id="GridPane" fx:id="mainGrid"
+          alignment="center"
+          hgap="10" vgap="10"
+          xmlns="http://javafx.com/javafx/8.0.172-ea"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="hopurd.main.controllers.MainController">
+    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+
+    <children>
+      <TableView fx:id="trip_table" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <columns>
+          <TableColumn fx:id="trip_table_name"  text="Nafn" />
+          <TableColumn fx:id="trip_table_price" text="Verð" />
+        </columns>
+      </TableView>
+      <TableView fx:id="user_table" GridPane.columnIndex="2" GridPane.rowIndex="2">
+        <columns>
+          <TableColumn fx:id="user_table_username" text="Notendanafn" />
+          <TableColumn fx:id="user_table_email" text="Netfang" />
+        </columns>
+      </TableView>
+      <TextField fx:id="trip_table_search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="user_table_search" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+   </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+</GridPane>
