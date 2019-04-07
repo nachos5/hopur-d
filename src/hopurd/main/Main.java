@@ -3,6 +3,7 @@ package hopurd.main;
 import hopurd.database.DbMain;
 import hopurd.main.gui.MainMenuBar;
 import hopurd.main.utilities.Language;
+import hopurd.models.Trip;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -70,6 +71,8 @@ public class Main extends Application {
 //        for (Trip trip: trips) {
 //            System.out.println(trip.getName());
 //        }
+//
+        //BookingExample.BookingExampleStatic();
 
         launch(args);
     }

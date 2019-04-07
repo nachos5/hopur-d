@@ -30,7 +30,7 @@ public class DbMain {
    * sér um að "resetta" databaseið, þarf bara í development
    */
   private static void dev() {
-    Schema.run(db_user);
+    //Schema.run(db_user);
     Insert.run();
   }
 

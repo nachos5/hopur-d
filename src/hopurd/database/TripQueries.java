@@ -1,5 +1,6 @@
 package hopurd.database;
 
+import hopurd.models.Company;
 import hopurd.models.Review;
 import hopurd.models.Trip;
 import org.json.JSONObject;
@@ -229,6 +230,51 @@ public class TripQueries {
 
     return trips;
   }
+
+  public static ArrayList<Trip> getTripByLocation(String country, String city) {
+    ArrayList<Trip> trips = new ArrayList<>();
+
+    if (
+        !hopurd.models.Enums.isInEnum(country, hopurd.models.JSON.tripJSONenum.class) ||
+            !hopurd.models.Enums.isInEnum(country, hopurd.models.JSON.tripJSONenum.class)
+    ) {
+      return trips;
+    }
+
+    String sql = "SELECT * FROM daytrip.trip" +
+        "WHERE country = ?" +
+        "AND city = ?";
+
+    try (PreparedStatement pstmt = DbMain.conn.prepareStatement(sql)) {
+      pstmt.setString(1, country);
+      pstmt.setString(2, city);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Trip trip = resultSetToTrip(rs, true);
+        trips.add(trip);
+      }
+    } catch (SQLException e) {
+      System.err.println("getTripsByLocation() failed" + e.getMessage());
+    }
+
+    return trips;
+  }
+
+  /**
+   * Obtains all trips from the given company
+   * @param companyName
+   * @return An ArrayList of the companies trips, null if no company
+   * of that name was found
+   */
+  public static ArrayList<Trip> getTripsByCompany(String companyName) {
+    Company company = CompanyQueries.getCompanyByName(companyName);
+    if (company != null)
+      return getTripsByCompanyId(company.getId());
+    return null;
+  }
+
 
   /**
    * Gets a trip from the database by name

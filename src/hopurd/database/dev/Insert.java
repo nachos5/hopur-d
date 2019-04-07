@@ -23,17 +23,17 @@ public class Insert {
   private static int delayBetweenInserts = 50;
 
   public static void run() {
-    // upphafs-notendagögn
-    createInitialUsers();
-    // upphafs-fyrirtæki
-    createInitialCompanies();
-    // upphafs-ferðagögn
-    createInitialTrips();
+//    // upphafs-notendagögn
+//    createInitialUsers();
+//    // upphafs-fyrirtæki
+//    createInitialCompanies();
+//    // upphafs-ferðagögn
+//    createInitialTrips();
     createInitialDepartures();
-    // upphafs-dómar
-    createInitialReviews();
-    // upphafs-bókanir
-    createInitialBookings();
+//    // upphafs-dómar
+//    createInitialReviews();
+//    // upphafs-bókanir
+//    createInitialBookings();
   }
 
   private static void createInitialCompanies() {
@@ -90,9 +90,14 @@ public class Insert {
 
     for (int i=0; i<noDepartures; i++) {
       int randTripId = faker.number().numberBetween(1, noTrips);
-      Trip trip = TripQueries.getTripById(randTripId);
+      Trip trip = null;
+      if (i < noTrips)
+        trip = TripQueries.getTripById(i+1);
+      else
+        trip = TripQueries.getTripById(randTripId);
       departures.add(new Departure(trip, Utils.randomDate(2020, 2021), Math.random() < 0.5,
-          faker.number().numberBetween(0, trip.getGroupSize())));
+          //faker.number().numberBetween(0, trip.getGroupSize())));
+          0));
     }
 
     for (Departure d: departures) {

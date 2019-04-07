@@ -82,6 +82,14 @@ public class API {
     return TripQueries.getAllTrips();
   }
 
+  public static ArrayList<Trip> getTripsByLocation(String country, String city) {
+    return TripQueries.getTripByLocation(country, city);
+  }
+
+  public static ArrayList<Trip> getTripsByCompany(String company) {
+    return TripQueries.getTripsByCompany(company);
+  }
+
   /**
    * Obtains trips by company id
    * @param id id
