@@ -25,7 +25,7 @@
 
 **resources:**
 - Myndir o.fl.
-- Dæmi um notkun
+- Dæmi um notkun:
 
 ```java
 login = new Dialog<>();
